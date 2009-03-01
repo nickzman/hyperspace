@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {closeSheet = id; reset = id; setValueForSender = id; }; 
+            CLASS = HyperspaceView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                ibConfigureSheet = NSWindow; 
+                ibDepth = NSSlider; 
+                ibDepthTxt = NSTextField; 
+                ibFov = NSSlider; 
+                ibFovTxt = NSTextField; 
+                ibMainScreenOnlyCbx = NSButton; 
+                ibResolution = NSSlider; 
+                ibResolutionTxt = NSTextField; 
+                ibShaderCbx = NSButton; 
+                ibSpeed = NSSlider; 
+                ibSpeedTxt = NSTextField; 
+                ibStarSize = NSSlider; 
+                ibStarSizeTxt = NSTextField; 
+                ibStars = NSSlider; 
+                ibStarsTxt = NSTextField; 
+                ibVersionTxt = NSTextField; 
+            }; 
+            SUPERCLASS = ScreenSaverView; 
+        }, 
+        {CLASS = ScreenSaverView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+    ); 
+    IBVersion = 1; 
+}

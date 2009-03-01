@@ -1,0 +1,11 @@
+//
+// Prefix header for all source files of the 'Hyperspace' target in the 'Hyperspace' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
+#endif
+
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
