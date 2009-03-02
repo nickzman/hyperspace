@@ -12,7 +12,7 @@
 
 bool RSSShadersSupported()
 {
-	long osVersion;
+	SInt32 osVersion;
 	NSArray *glExtensions = [[NSString stringWithUTF8String:(const char *)glGetString(GL_EXTENSIONS)] componentsSeparatedByString:@" "];
 	
 	Gestalt(gestaltSystemVersion, &osVersion);

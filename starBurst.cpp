@@ -175,7 +175,7 @@ void starBurst::draw(HyperspaceSaverSettings *inSettings){
 	// draw flare
 	float brightness = 1.0f - (size * 0.333333f);
 	if(brightness > 0.0f){
-		double p[3];
+		float p[3];
 		p[0] = pos[0];
 		p[1] = pos[1];
 		p[2] = pos[2];
@@ -217,7 +217,7 @@ void starBurst::draw(float lerp, HyperspaceSaverSettings *inSettings){
 	// draw flare
 	float brightness = 1.0f - (size * 0.333333f);
 	if(brightness > 0.0f){
-		double p[3];
+		float p[3];
 		p[0] = pos[0];
 		p[1] = pos[1];
 		p[2] = pos[2];

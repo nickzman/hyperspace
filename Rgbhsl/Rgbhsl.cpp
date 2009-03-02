@@ -70,8 +70,8 @@ void rgb2hsl(float r, float g, float b, float &h, float &s, float &l){
 		gg = g / l;
 	}
 	if(l == 0.0){
-		h = 0.0;
-		s = 1.0;
+		h = 0.0f;
+		s = 1.0f;
 		return;
 	}
 
@@ -124,38 +124,38 @@ void rgb2hsl(float r, float g, float b, float &h, float &s, float &l){
 void hsl2rgb(float h, float s, float l, float &r, float &g, float &b){
 	// hue influence
 	if(h < 0.166667){  // full red, some green
-		r = 1.0;
+		r = 1.0f;
 		g = h * 6.0f;
-		b = 0.0;
+		b = 0.0f;
 	}
 	else {
-		if(h < 0.5){  // full green
-			g = 1.0;
-			if(h < 0.333333){  // some red
+		if(h < 0.5f){  // full green
+			g = 1.0f;
+			if(h < 0.333333f){  // some red
 				r = 1.0f - ((h - 0.166667f) * 6.0f);
-				b = 0.0;
+				b = 0.0f;
 			}
 			else{  // some blue
 				b = (h - 0.333333f) * 6.0f;
-				r = 0.0;
+				r = 0.0f;
 			}
 		}
 		else{
 			if(h < 0.833333){  // full blue
-				b = 1.0;
+				b = 1.0f;
 				if(h < 0.666667){  // some green
 					g = 1.0f - ((h - 0.5f) * 6.0f);
-					r = 0.0;
+					r = 0.0f;
 				}
 				else{  // some red
 					r = (h - 0.666667f) * 6.0f;
-					g = 0.0;
+					g = 0.0f;
 				}
 			}
 			else{  // full red, some blue
-				r = 1.0;
+				r = 1.0f;
 				b = 1.0f - ((h - 0.833333f) * 6.0f);
-				g = 0.0;
+				g = 0.0f;
 			}
 		}
 	}
@@ -182,7 +182,7 @@ void hslTween(float h1, float s1, float l1,
 		else{
 			outh = h1 + (tween * (1.0f - (h1 - h2)));
 			if(outh > 1.0)
-				outh -= 1.0;
+				outh -= 1.0f;
 		}
 	}
 	else{  // backward around color wheel
@@ -191,7 +191,7 @@ void hslTween(float h1, float s1, float l1,
 		else{
 			outh = h1 - (tween * (1.0f - (h2 - h1)));
 			if(outh < 0.0)
-				outh += 1.0;
+				outh += 1.0f;
 		}
 	}
 

@@ -438,7 +438,7 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 
 	// draw sun with lens flare
 	glDisable(GL_FOG);
-	double flarepos[3] = {0.0f, 2.0f, 0.0f};
+	float flarepos[3] = {0.0f, 2.0f, 0.0f};
 	glBindTexture(GL_TEXTURE_2D, inSettings->flaretex[0]);
 	inSettings->sunStar->draw(inSettings->camPos, inSettings->unroll, inSettings->modelMat, inSettings->projMat, inSettings->viewport);
 	float diff[3] = {flarepos[0] - inSettings->camPos[0], flarepos[1] - inSettings->camPos[1], flarepos[2] - inSettings->camPos[2]};
@@ -611,19 +611,19 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 		//unsigned char* goo_vp_asm = readShaderFile("goo.vp");
 		glGenProgramsARB(1, &(inSettings->goo_vp));
 		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->goo_vp);
-		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen((const char *)goo_vp_asm), goo_vp_asm);
+		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)goo_vp_asm)), goo_vp_asm);
 		//unsigned char* ggoo_fp_asm = readShaderFile("goo.fp");
 		glGenProgramsARB(1, &(inSettings->goo_fp));
 		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->goo_fp);
-		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen((const char *)goo_fp_asm), goo_fp_asm);
+		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)goo_fp_asm)), goo_fp_asm);
 		//unsigned char* tunnel_vp_asm = readShaderFile("tunnel.vp");
 		glGenProgramsARB(1, &(inSettings->tunnel_vp));
 		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->tunnel_vp);
-		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen((const char *)tunnel_vp_asm), tunnel_vp_asm);
+		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)tunnel_vp_asm)), tunnel_vp_asm);
 		//unsigned char* ttunnel_fp_asm = readShaderFile("tunnel.fp");
 		glGenProgramsARB(1, &(inSettings->tunnel_fp));
 		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->tunnel_fp);
-		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, strlen((const char *)tunnel_fp_asm), tunnel_fp_asm);
+		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)tunnel_fp_asm)), tunnel_fp_asm);
 		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->nebulatex);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -105,12 +105,12 @@
             NSSize tSize;
             struct timeval tTime;
             int i;
-			long interval = 1;
+			GLint interval = 1;
             
             [self lockFocus];
             [[lView openGLContext] makeCurrentContext];
             
-            glClearColor(0.0, 0.0, 0.0, 0.0);
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT);
             glFlush();
             CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &interval);	// don't allow screen tearing
@@ -121,7 +121,7 @@
 			
             for (i = 0 ; i < 10 ; i++)
             {
-                lTimes[i]=0.03;
+                lTimes[i]=0.03f;
             }
             lTimeindex = 0;
             lSettings.frameTime=0;
@@ -322,12 +322,12 @@
 
 - (void)readDefaults:(ScreenSaverDefaults *)inDefaults
 {
-    lSettings.dSpeed = [inDefaults integerForKey:@"Speed"];
-	lSettings.dStars = [inDefaults integerForKey:@"Stars"];
-	lSettings.dStarSize = [inDefaults integerForKey:@"StarSize"];
-	lSettings.dResolution = [inDefaults integerForKey:@"Resolution"];
-	lSettings.dDepth = [inDefaults integerForKey:@"Depth"];
-	lSettings.dFov = [inDefaults integerForKey:@"Fov"];
+    lSettings.dSpeed = int([inDefaults integerForKey:@"Speed"]);
+	lSettings.dStars = int([inDefaults integerForKey:@"Stars"]);
+	lSettings.dStarSize = int([inDefaults integerForKey:@"StarSize"]);
+	lSettings.dResolution = int([inDefaults integerForKey:@"Resolution"]);
+	lSettings.dDepth = int([inDefaults integerForKey:@"Depth"]);
+	lSettings.dFov = int([inDefaults integerForKey:@"Fov"]);
 	lSettings.dShaders = [inDefaults integerForKey:@"UseShaders"];
 	lMainScreenOnly = [inDefaults boolForKey:@"MainScreenOnly"];
 }

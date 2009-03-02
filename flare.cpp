@@ -179,7 +179,7 @@ void initFlares(HyperspaceSaverSettings *inSettings){
 // Draw a flare at a specified (x,y) location on the screen
 // Screen corners are at (0,0) and (1,1)
 // alpha = 0.0 for lowest intensity; alpha = 1.0 for highest intensity
-void flare(double *pos, float red, float green, float blue, float alpha, HyperspaceSaverSettings *inSettings){
+void flare(float *pos, float red, float green, float blue, float alpha, HyperspaceSaverSettings *inSettings){
 	double winx, winy, winz;  // in screen coordinates
 	float x, y, dx, dy;
 	float fadewidth, temp;
