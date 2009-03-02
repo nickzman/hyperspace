@@ -43,7 +43,7 @@ wavyNormalCubeMaps::wavyNormalCubeMaps(int frames, int size){
 	float vec[3];
 	float norm[3];
 	float offset = -0.5f * float(texSize) + 0.5f;
-	float mult = 0.5f / float(texSize);
+	//float mult = 0.5f / float(texSize);
 	for(g=0; g<numFrames; g++){
 		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, texture[g]);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
