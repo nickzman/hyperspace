@@ -13,6 +13,7 @@
 		8D255ACC0486D3F9007BF209 /* HyperspaceView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F500797A0118B23001CA0E54 /* HyperspaceView.mm */; };
 		8D255ACE0486D3F9007BF209 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		8D255ACF0486D3F9007BF209 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */; };
+		E03109500F60E0CB009FCCA0 /* frsqrt.hh in Headers */ = {isa = PBXBuildFile; fileRef = E031094F0F60E0CB009FCCA0 /* frsqrt.hh */; };
 		E042195B09A973B500E46FE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E042195909A973B500E46FE2 /* Localizable.strings */; };
 		E0BA139C09CE111D00312D77 /* MacHelperFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = E0BA139A09CE111D00312D77 /* MacHelperFunctions.h */; };
 		E0BA139D09CE111D00312D77 /* MacHelperFunctions.mm in Sources */ = {isa = PBXBuildFile; fileRef = E0BA139B09CE111D00312D77 /* MacHelperFunctions.mm */; };
@@ -82,6 +83,7 @@
 		32DBCFA80370C50100C91783 /* Hyperspace_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hyperspace_Prefix.pch; sourceTree = "<group>"; };
 		8D255AD20486D3F9007BF209 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D255AD30486D3F9007BF209 /* Hyperspace.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Hyperspace.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		E031094F0F60E0CB009FCCA0 /* frsqrt.hh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = frsqrt.hh; sourceTree = "<group>"; };
 		E042195A09A973B500E46FE2 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E05D36B00E2A8DE6000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = German.lproj/ConfigureSheet.nib; sourceTree = "<group>"; };
 		E05D36B20E2A8E04000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -133,7 +135,7 @@
 		E0CDA25009A907E90004FDE6 /* impKnot.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impKnot.cpp; sourceTree = "<group>"; };
 		E0CDA25109A907E90004FDE6 /* impShape.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impShape.cpp; sourceTree = "<group>"; };
 		E0CDA25209A907E90004FDE6 /* impSphere.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impSphere.cpp; sourceTree = "<group>"; };
-		E0CDA25309A907E90004FDE6 /* impSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impSurface.cpp; sourceTree = "<group>"; };
+		E0CDA25309A907E90004FDE6 /* impSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = impSurface.cpp; sourceTree = "<group>"; };
 		E0CDA25409A907E90004FDE6 /* impTorus.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impTorus.cpp; sourceTree = "<group>"; };
 		E0CDA25E09A908010004FDE6 /* impCrawlPoint.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = impCrawlPoint.h; sourceTree = "<group>"; };
 		E0CDA26009A908070004FDE6 /* impCubeTables.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = impCubeTables.h; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 		32DBCFA70370C4F300C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				E031094F0F60E0CB009FCCA0 /* frsqrt.hh */,
 				E0CDA24B09A907E90004FDE6 /* Implicit */,
 				E0CDA09809A8E9150004FDE6 /* rsMath */,
 				E0CDA0BA09A8E96B0004FDE6 /* rsText */,
@@ -367,6 +370,7 @@
 				E0CDA26F09A908270004FDE6 /* impSurface.h in Headers */,
 				E0CDA27109A9082A0004FDE6 /* impTorus.h in Headers */,
 				E0BA139C09CE111D00312D77 /* MacHelperFunctions.h in Headers */,
+				E03109500F60E0CB009FCCA0 /* frsqrt.hh in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -506,6 +510,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				"GCC_ALTIVEC_EXTENSIONS[arch=ppc]" = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
@@ -523,10 +528,13 @@
 		EF7AD72F08BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				"GCC_ALTIVEC_EXTENSIONS[arch=ppc]" = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_FAST_MATH = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Hyperspace_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
@@ -545,7 +553,7 @@
 					x86_64,
 				);
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
-				GCC_FAST_OBJC_DISPATCH = NO;
+				"GCC_FAST_OBJC_DISPATCH[arch=ppc]" = NO;
 				"GCC_VERSION[sdk=macosx10.4][arch=*]" = 4.0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -568,10 +576,9 @@
 				ARCHS = (
 					i386,
 					ppc,
-					x86_64,
 				);
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
-				GCC_FAST_OBJC_DISPATCH = NO;
+				"GCC_FAST_OBJC_DISPATCH[arch=ppc]" = NO;
 				"GCC_VERSION[sdk=macosx10.4][arch=*]" = 4.0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

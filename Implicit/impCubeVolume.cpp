@@ -20,6 +20,7 @@
 
 //#include <Implicit/impCubeVolume.h>
 #include "impCubeVolume.h"
+#include "frsqrt.hh"
 
 
 impCubeVolume::impCubeVolume(){
@@ -733,7 +734,7 @@ inline void impCubeVolume::addVertexToSurface(unsigned int axis, unsigned int in
 		const float nz(function(pos, contextForFunction) - val);
 		pos[2] += 0.01f;
 		// then normalize
-		const float normalizer(1.0f / sqrtf(nx * nx + ny * ny + nz * nz));
+		const float normalizer(rsqrtf(nx * nx + ny * ny + nz * nz));
 		data[0] = nx * normalizer;
 		data[1] = ny * normalizer;
 		data[2] = nz * normalizer;

@@ -22,7 +22,7 @@
 #include <math.h>
 #include <iostream>
 #include "impSurface.h"
-
+#include "frsqrt.hh"
 
 
 impSurface::~impSurface(){
@@ -95,19 +95,6 @@ void impSurface::addVertex(float* data){
 }
 
 
-// The legendary Quake 3 inverse square root function:
-inline float InvSqrt(float x)
-{
-	float xhalf = 0.5f*x;
-	int i = *(int*)&x;
-	i = 0x5f3759df - (i>>1);
-	x = *(float*)&i;
-	x = x*(1.5f-xhalf*x*x);
-	return x;
-}
-
-
-
 void impSurface::calculateNormals(){
 	unsigned int i, j, k=0;
 	float vec1[3];
@@ -162,9 +149,7 @@ void impSurface::calculateNormals(){
 	for(i=0; i<vertex_offset; i+=6){
 		const unsigned int ii(i+1);
 		const unsigned int iii(i+2);
-		/*const float normalizer(1.0f / sqrtf(vertices[i] * vertices[i]
-			+ vertices[ii] * vertices[ii] + vertices[iii] * vertices[iii]));*/
-		const float normalizer(InvSqrt(vertices[i]*vertices[i]+vertices[ii]*vertices[ii]+vertices[iii]*vertices[iii]));
+		const float normalizer(rsqrtf(vertices[i]*vertices[i]+vertices[ii]*vertices[ii]+vertices[iii]*vertices[iii]));
 		vertices[i] *= normalizer;
 		vertices[ii] *= normalizer;
 		vertices[iii] *= normalizer;
