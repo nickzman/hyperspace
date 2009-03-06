@@ -55,7 +55,8 @@ goo::goo(int res, float rad, float (*func)(float* position, void *context), void
 			useSurface[i][j] = false;
 		}
 	}
-	volume->useFastNormals(true);
+	// Disabled because it was causing some tearing to occur:
+	//volume->useFastNormals(true);
 }
 
 
