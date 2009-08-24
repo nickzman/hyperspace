@@ -576,6 +576,7 @@
 				ARCHS = (
 					i386,
 					ppc,
+					x86_64,
 				);
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
 				"GCC_FAST_OBJC_DISPATCH[arch=ppc]" = NO;
