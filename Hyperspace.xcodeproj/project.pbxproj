@@ -238,10 +238,21 @@
 			isa = PBXGroup;
 			children = (
 				E031094F0F60E0CB009FCCA0 /* frsqrt.hh */,
+				E0AA3C5511E11C3500F84B8B /* Hyperspace */,
 				E0CDA24B09A907E90004FDE6 /* Implicit */,
 				E0CDA09809A8E9150004FDE6 /* rsMath */,
 				E0CDA0BA09A8E96B0004FDE6 /* rsText */,
 				E0CDA20A09A9001E0004FDE6 /* Rgbhsl */,
+				32DBCFA80370C50100C91783 /* Hyperspace_Prefix.pch */,
+				E0BA139A09CE111D00312D77 /* MacHelperFunctions.h */,
+				E0BA139B09CE111D00312D77 /* MacHelperFunctions.mm */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		E0AA3C5511E11C3500F84B8B /* Hyperspace */ = {
+			isa = PBXGroup;
+			children = (
 				E0CDA09409A8E8270004FDE6 /* Hyperspace.h */,
 				E0CDA06009A8E5C00004FDE6 /* Hyperspace.cpp */,
 				E0CDA07A09A8E6580004FDE6 /* starBurst.h */,
@@ -262,11 +273,8 @@
 				E0CDA06109A8E5C00004FDE6 /* tunnel.cpp */,
 				E0CDA07409A8E6370004FDE6 /* nebulamap.h */,
 				E0CDA07609A8E6460004FDE6 /* shaders.h */,
-				32DBCFA80370C50100C91783 /* Hyperspace_Prefix.pch */,
-				E0BA139A09CE111D00312D77 /* MacHelperFunctions.h */,
-				E0BA139B09CE111D00312D77 /* MacHelperFunctions.mm */,
 			);
-			name = "Other Sources";
+			path = Hyperspace;
 			sourceTree = "<group>";
 		};
 		E0CDA09809A8E9150004FDE6 /* rsMath */ = {
