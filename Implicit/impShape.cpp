@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2001-2005  Terence M. Welsh
+ * Copyright (C) 2001-2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
  * Implicit is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * Implicit is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,8 +19,8 @@
  */
 
 
-//#include <Implicit/impShape.h>
-#include "impShape.h"
+#include <Implicit/impShape.h>
+#include <string.h>
 
 
 impShape::impShape(){
@@ -32,7 +33,7 @@ impShape::impShape(){
 		= invmat[6] = invmat[7] = invmat[8] = invmat[9]
 		= invmat[11] = invmat[12] = invmat[13] = invmat[14] = 0.0f;
 
-	thickness = 1.0f;
+	thickness = 0.1f;
 	thicknessSquared = thickness * thickness;
 }
 
@@ -44,102 +45,107 @@ void impShape::setPosition(float x, float y, float z){
 	invmat[12] = -x;
 	invmat[13] = -y;
 	invmat[14] = -z;
-}
-
-
-void impShape::setPosition(float* position){
-	mat[12] = position[0];
-	mat[13] = position[1];
-	mat[14] = position[2];
-	invmat[12] = -position[0];
-	invmat[13] = -position[1];
-	invmat[14] = -position[2];
+	invtrmat[3] = -x;
+	invtrmat[7] = -y;
+	invtrmat[11] = -z;
+#ifdef __SSE__
+	((float*)(&(invtrmatrow[0])))[3] = -x;
+	((float*)(&(invtrmatrow[1])))[3] = -y;
+	((float*)(&(invtrmatrow[2])))[3] = -z;
+#endif
 }
 
 
 // Don't need to set this for simple spheres.
 // A whole matrix is only necessary for weird asymmetric objects.
 void impShape::setMatrix(float* m){
-	for(int i=0; i<16; i++)
-		mat[i] = m[i];
+	memcpy(mat, m, 16 * sizeof(float));
 	
 	invertMatrix();
+
+	invtrmat[0] = invmat[0];
+	invtrmat[1] = invmat[4];
+	invtrmat[2] = invmat[8];
+	invtrmat[3] = invmat[12];
+	invtrmat[4] = invmat[1];
+	invtrmat[5] = invmat[5];
+	invtrmat[6] = invmat[9];
+	invtrmat[7] = invmat[13];
+	invtrmat[8] = invmat[2];
+	invtrmat[9] = invmat[6];
+	invtrmat[10] = invmat[10];
+	invtrmat[11] = invmat[14];
+	invtrmat[12] = invmat[3];
+	invtrmat[13] = invmat[7];
+	invtrmat[14] = invmat[11];
+	invtrmat[15] = invmat[15];
+#ifdef __SSE__
+	invtrmatrow[0] = _mm_loadu_ps(invtrmat);
+	invtrmatrow[1] = _mm_loadu_ps(&(invtrmat[4]));
+	invtrmatrow[2] = _mm_loadu_ps(&(invtrmat[8]));
+	invtrmatrow[3] = _mm_loadu_ps(&(invtrmat[12]));
+#endif
 }
 
 
-void impShape::invertMatrix(){
-	float rmat[4][8];
-	float a, b;
-	int i, j, k;
+float impShape::determinant3(const float aa, const float ab, const float ac,
+	const float ba, const float bb, const float bc,
+	const float ca, const float cb, const float cc){
+	return (aa * bb * cc) + (ab * bc * ca) + (ac * ba * cb)
+		- (aa * bc * cb) - (ab * ba * cc) - (ac * bb * ca); 
+}
 
-	// inititialize reduction matrix
-	rmat[0][0] = mat[0];
-	rmat[1][0] = mat[1];
-	rmat[2][0] = mat[2];
-	rmat[3][0] = mat[3];
-	rmat[0][1] = mat[4];
-	rmat[1][1] = mat[5];
-	rmat[2][1] = mat[6];
-	rmat[3][1] = mat[7];
-	rmat[0][2] = mat[8];
-	rmat[1][2] = mat[9];
-	rmat[2][2] = mat[10];
-	rmat[3][2] = mat[11];
-	rmat[0][3] = mat[12];
-	rmat[1][3] = mat[13];
-	rmat[2][3] = mat[14];
-	rmat[3][3] = mat[15];
-	rmat[0][4] = 1.0f;
-	rmat[1][4] = 0.0f;
-	rmat[2][4] = 0.0f;
-	rmat[3][4] = 0.0f;
-	rmat[0][5] = 0.0f;
-	rmat[1][5] = 1.0f;
-	rmat[2][5] = 0.0f;
-	rmat[3][5] = 0.0f;
-	rmat[0][6] = 0.0f;
-	rmat[1][6] = 0.0f;
-	rmat[2][6] = 1.0f;
-	rmat[3][6] = 0.0f;
-	rmat[0][7] = 0.0f;
-	rmat[1][7] = 0.0f;
-	rmat[2][7] = 0.0f;
-	rmat[3][7] = 1.0f;
 
-	// perform reductions
-	for(i=0; i<4; i++){
-		a = rmat[i][i];
-		if(a == 0.0f)
-			return;  // matrix is singular, can't be inverted
-		a = 1.0f / a;
-		for(j=0; j<8; j++)
-			rmat[i][j] = rmat[i][j] * a;
-		for(k=0; k<4; k++){
-			if((k-i) != 0){
-				b = rmat[k][i];
-				for(j=0; j<8; j++)
-					rmat[k][j] = rmat[k][j] - b * rmat[i][j];
-			}
-		}
-	}
+bool impShape::invertMatrix(){
+	const float aa(mat[0]);
+	const float ba(mat[1]);
+	const float ca(mat[2]);
+	const float da(mat[3]);
+	const float ab(mat[4]);
+	const float bb(mat[5]);
+	const float cb(mat[6]);
+	const float db(mat[7]);
+	const float ac(mat[8]);
+	const float bc(mat[9]);
+	const float cc(mat[10]);
+	const float dc(mat[11]);
+	const float ad(mat[12]);
+	const float bd(mat[13]);
+	const float cd(mat[14]);
+	const float dd(mat[15]);
 
-	// extract inverted matrix
-	invmat[0] = rmat[0][4];
-	invmat[1] = rmat[1][4];
-	invmat[2] = rmat[2][4];
-	invmat[3] = rmat[3][4];
-	invmat[4] = rmat[0][5];
-	invmat[5] = rmat[1][5];
-	invmat[6] = rmat[2][5];
-	invmat[7] = rmat[3][5];
-	invmat[8] = rmat[0][6];
-	invmat[9] = rmat[1][6];
-	invmat[10] = rmat[2][6];
-	invmat[11] = rmat[3][6];
-	invmat[12] = rmat[0][7];
-	invmat[13] = rmat[1][7];
-	invmat[14] = rmat[2][7];
-	invmat[15] = rmat[3][7];
+	// calculate determinant
+	const float det3_1(determinant3(bb, bc, bd, cb, cc, cd, db, dc, dd));
+	const float det3_2(-determinant3(ab, ac, ad, cb, cc, cd, db, dc, dd));
+	const float det3_3(determinant3(ab, ac, ad, bb, bc, bd, db, dc, dd));
+	const float det3_4(-determinant3(ab, ac, ad, bb, bc, bd, cb, cc, cd));
+	const float det(aa * det3_1 + ba * det3_2 + ca * det3_3 + da * det3_4);
+
+	if(fabs(det) < 0.000001f)
+		return false;  // matrix is singular, cannot be inverted
+
+	// reciprocal of determinant
+	const float rec_det(1.0f / det);
+
+	// calculate inverted matrix
+	invmat[0]  =   det3_1 * rec_det;
+	invmat[4]  =   det3_2 * rec_det;
+	invmat[8]  =   det3_3 * rec_det;
+	invmat[12] =   det3_4 * rec_det;
+	invmat[1]  = - determinant3(ba, bc, bd, ca, cc, cd, da, dc, dd) * rec_det;
+	invmat[5]  =   determinant3(aa, ac, ad, ca, cc, cd, da, dc, dd) * rec_det;
+	invmat[9]  = - determinant3(aa, ac, ad, ba, bc, bd, da, dc, dd) * rec_det;
+	invmat[13] =   determinant3(aa, ac, ad, ba, bc, bd, ca, cc, cd) * rec_det;
+	invmat[2]  =   determinant3(ba, bb, bd, ca, cb, cd, da, db, dd) * rec_det;
+	invmat[6]  = - determinant3(aa, ab, ad, ca, cb, cd, da, db, dd) * rec_det;
+	invmat[10] =   determinant3(aa, ab, ad, ba, bb, bd, da, db, dd) * rec_det;
+	invmat[14] = - determinant3(aa, ab, ad, ba, bb, bd, ca, cb, cd) * rec_det;
+	invmat[3]  = - determinant3(ba, bb, bc, ca, cb, cc, da, db, dc) * rec_det;
+	invmat[7]  =   determinant3(aa, ab, ac, ca, cb, cc, da, db, dc) * rec_det;
+	invmat[11] = - determinant3(aa, ab, ac, ba, bb, bc, da, db, dc) * rec_det;
+	invmat[15] =   determinant3(aa, ab, ac, ba, bb, bc, ca, cb, cc) * rec_det;
+
+	return true; 
 }
 
 

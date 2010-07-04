@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
  * Implicit is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * Implicit is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,7 +24,7 @@
 
 
 
-#include "impShape.h"
+#include <Implicit/impShape.h>
 
 
 
@@ -37,9 +38,8 @@ private:
 
 public:
 	impKnot(){
-		radius1 = 1.0f; radius2 = 0.5f; thickness = 0.1f;
+		radius1 = 1.0f; radius2 = 0.5f;
 		coils = 3; coilsf = float(coils); twists = 2; twistsf = float(twists);
-		thicknessSquared = thickness * thickness;
 		twistsOverCoils = twistsf / coilsf;
 		lat_offset = 6.28318530718f / coilsf;
 	}

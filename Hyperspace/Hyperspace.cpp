@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,63 +22,48 @@
 // Hyperspace screensaver
 // Terry Welsh
 // Originally wrote this saver in 2001, but computers weren't fast
-// enough to run it at a decent frame rate.
+// enough to run it at a decent frame rate.  Finally released it in 2005.
 
-/*#ifdef WIN32
-	#include <windows.h>
-#endif
-#include <stdio.h>
+#ifdef WIN32
+#include <windows.h>
 #include <rsWin32Saver/rsWin32Saver.h>
-#include <rsText/rsText.h>
-#include <math.h>
-#include <time.h>
-#include <gl/gl.h>
-#include <gl/glu.h>
 #include <regstr.h>
 #include <commctrl.h>
-#include <rsMath/rsMath.h>
 #include <resource.h>
-//#include <Hyperspace/extgl.h>
 #include <Hyperspace/extensions.h>
-#include <Hyperspace/flare.h>
-#include <Hyperspace/causticTextures.h>
-#include <Hyperspace/wavyNormalCubeMaps.h>
-#include <Hyperspace/splinepath.h>
-#include <Hyperspace/tunnel.h>
-#include <Hyperspace/goo.h>
-#include <Hyperspace/stretchedparticle.h>
-#include <Hyperspace/starBurst.h>
-#include <Hyperspace/nebulamap.h>
-#include <Hyperspace/shaders.h>*/
+#endif
+#ifdef RS_XSCREENSAVER
+#include <rsXScreenSaver/rsXScreenSaver.h>
+#endif
+
 #include <stdio.h>
-#include "rsText.h"
+#include <rsText/rsText.h>
 #include <math.h>
 #include <time.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include "rsMath.h"
-#include <OpenGL/glext.h>
-#include "flare.h"
-#include "causticTextures.h"
-#include "wavyNormalCubeMaps.h"
-#include "splinePath.h"
-#include "tunnel.h"
-#include "goo.h"
-#include "stretchedparticle.h"
-#include "starBurst.h"
-#include "nebulamap.h"
-#include "shaders.h"
+#include <rsMath/rsMath.h>
+#include <Hyperspace/flare.h>
+#include <Hyperspace/causticTextures.h>
+#include <Hyperspace/wavyNormalCubeMaps.h>
+#include <Hyperspace/splinePath.h>
+#include <Hyperspace/tunnel.h>
+#include <Hyperspace/goo.h>
+#include <Hyperspace/stretchedParticle.h>
+#include <Hyperspace/starBurst.h>
+#include <Hyperspace/nebulamap.h>
+#include <Hyperspace/shaders.h>
 #include "Hyperspace.h"
-#include "MacHelperFunctions.h"
 
 //#include <fstream>
 //std::ofstream outfile;
 
 
-
-/*LPCTSTR registryPath = ("Software\\Really Slick\\Hyperspace");
+/*#ifdef WIN32
+LPCTSTR registryPath = ("Software\\Really Slick\\Hyperspace");
 HGLRC hglrc;
 HDC hdc;
+#endif
 int readyToDraw = 0;
 int xsize, ysize;
 float aspectRatio;
@@ -91,15 +77,16 @@ int dStarSize;
 int dResolution;
 int dDepth;
 int dFov;
-bool dShaders;
-bool firstDraw;
+int dUseTunnels;
+int dUseGoo;
+int dShaders;
 
 
 float unroll;
 float billboardMat[16];
 double modelMat[16];
 double projMat[16];
-GLint viewport[4];
+int viewport[4];
 
 float camPos[3] = {0.0f, 0.0f, 0.0f};
 float depth;
@@ -110,102 +97,39 @@ int whichTexture = 0;
 splinePath* thePath;
 tunnel* theTunnel;
 goo* theGoo;
-float shiftx, shiftz;
-GLuint speckletex, spheretex, nebulatex;
-GLuint goo_vp, goo_fp, tunnel_vp, tunnel_fp;
+unsigned int speckletex, spheretex, nebulatex;
+unsigned int goo_vp, goo_fp, tunnel_vp, tunnel_fp;
 
 stretchedParticle** stars;
 stretchedParticle* sunStar;
 starBurst* theStarBurst;
-
-
-
-float goo_c[4];  // goo constants
-float goo_cp[4] = {0.0f, 1.0f, 2.0f, 3.0f};  // goo constants phase
-float goo_cs[4];  // goo constants speed
 */
-float gooFunction(float* position, void *context){
-	HyperspaceSaverSettings *inSettings = (HyperspaceSaverSettings *)context;
-	const float px(position[0] + inSettings->shiftx);
-	const float pz(position[2] + inSettings->shiftz);
-	const float camx(px - inSettings->camPos[0]);
-	const float camz(pz - inSettings->camPos[2]);
-
-	return
-		// This first term defines upper and lower surfaces.
-		position[1] * position[1] * 1.25f
-		// These terms make the surfaces wavy.
-		+ inSettings->goo_c[0] * rsCosf(px - 2.71f * position[1])
-		+ inSettings->goo_c[1] * rsCosf(4.21f * position[1] + pz)
-		+ inSettings->goo_c[2] * rsCosf(1.91f * px - 1.67f * pz)
-		+ inSettings->goo_c[3] * rsCosf(1.53f * px + 1.11f * position[1] + 2.11f * pz)
-		// The last term creates a bubble around the eyepoint so it doesn't
-		// punch through the surface.
-		- 0.1f / (camx * camx + position[1] * position[1] + camz * camz);
-}
 
 
-// read in vertex/fragment program and store into a string.
-unsigned char* readShaderFile(const char* name){
-	FILE *in = fopen(name, "r");
-   
-	if (!in)
-		return 0;
- 
-	unsigned char *b = 0;
-   
-	// get file size
-	long size = 0, curpos;
-	curpos = ftell(in);
-	fseek(in, 0L, SEEK_END);
-	size = ftell(in);
-	fseek(in, curpos, SEEK_SET);
-   
-	if (!size)
-		return 0;
-   
-	if (!(b = new unsigned char[size + 1]))
-		return 0;
-
-	memset(b, '\0', size + 1);
-
-	if (!b)
-		return 0;
-   
-	fread(b, 1, size, in); // check return with size?
-
-	fclose(in);
-   
-	return b;
-}
-
-
-__private_extern__ void draw(HyperspaceSaverSettings *inSettings){
-	int i;
-
-	//static int first = 1;
-	if(inSettings->firstDraw){
-		glDisable(GL_FOG);
-		// Caustic textures can only be created after rendering context has been created
-		// because they have to be drawn and then read back from the framebuffer.
-//#ifdef WIN32
-		if(inSettings->doingPreview) // super fast for Windows previewer
-			inSettings->theCausticTextures = new causticTextures(8, inSettings->numAnimTexFrames, 32, 32, 1.0f, 0.01f, 10.0f);
-		else  // normal
-//#endif
-			inSettings->theCausticTextures = new causticTextures(8, inSettings->numAnimTexFrames, 100, 256, 1.0f, 0.01f, 20.0f);
-		glEnable(GL_FOG);
+void draw(HyperspaceSaverSettings *inSettings){
+	if(inSettings->first){
+		if(inSettings->dUseTunnels){  // only tunnels use caustic textures
+			glDisable(GL_FOG);
+			// Caustic textures can only be created after rendering context has been created
+			// because they have to be drawn and then read back from the framebuffer.
+#ifdef WIN32
+			if(doingPreview) // super fast for Windows previewer
+				inSettings->theCausticTextures = new causticTextures(8, inSettings->numAnimTexFrames, 32, 32, 1.0f, 0.01f, 10.0f);
+			else  // normal
+#endif
+				inSettings->theCausticTextures = new causticTextures(8, inSettings->numAnimTexFrames, 100, 256, 1.0f, 0.01f, 20.0f);
+			glEnable(GL_FOG);
+		}
 		if(inSettings->dShaders){
-//#ifdef WIN32
-			if(inSettings->doingPreview) // super fast for Windows previewer
+#ifdef WIN32
+			if(doingPreview) // super fast for Windows previewer
 				inSettings->theWNCM = new wavyNormalCubeMaps(inSettings->numAnimTexFrames, 32);
 			else  // normal
-//#endif
+#endif
 				inSettings->theWNCM = new wavyNormalCubeMaps(inSettings->numAnimTexFrames, 128);
 		}
 		glViewport(inSettings->viewport[0], inSettings->viewport[1], inSettings->viewport[2], inSettings->viewport[3]);
-		//first = 0;
-		inSettings->firstDraw = false;
+		inSettings->first = 0;
 	}
 
 	// Variables for printing text
@@ -263,7 +187,7 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 	camRoll[0] = camRoll[1] * t + camRoll[2] * (1.0f - t);
 
 	static float pathDir[3] = {0.0f, 0.0f, -1.0f};
-	inSettings->thePath->moveAlongPath(float(inSettings->dSpeed) * inSettings->frameTime * 0.03f);
+	inSettings->thePath->moveAlongPath(float(inSettings->dSpeed) * inSettings->frameTime * 0.04f);
 	inSettings->thePath->update(inSettings->frameTime);
 	inSettings->thePath->getPoint(inSettings->dDepth + 2, inSettings->thePath->step, inSettings->camPos);
 	inSettings->thePath->getBaseDirection(inSettings->dDepth + 2, inSettings->thePath->step, pathDir);
@@ -280,12 +204,14 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 	glGetDoublev(GL_MODELVIEW_MATRIX, inSettings->modelMat);
 	inSettings->unroll = camRoll[0] * RS_RAD2DEG;
 
-	// calculate diagonal fov
-	float diagFov = 0.5f * float(inSettings->dFov) / RS_RAD2DEG;
-	diagFov = tanf(diagFov);
-	diagFov = sqrtf(diagFov * diagFov + (diagFov * inSettings->aspectRatio * diagFov * inSettings->aspectRatio));
-	diagFov = 2.0f * atanf(diagFov);
-	inSettings->theGoo->update(inSettings->camPos[0], inSettings->camPos[2], pathAngle + camHeading[0], diagFov, &(inSettings->shiftx), &(inSettings->shiftz));
+	if(inSettings->dUseGoo){
+		// calculate diagonal fov
+		float diagFov = 0.5f * float(inSettings->dFov) / RS_RAD2DEG;
+		diagFov = tanf(diagFov);
+		diagFov = sqrtf(diagFov * diagFov + (diagFov * inSettings->aspectRatio * diagFov * inSettings->aspectRatio));
+		diagFov = 2.0f * atanf(diagFov);
+		inSettings->theGoo->update(inSettings->camPos[0], inSettings->camPos[2], pathAngle + camHeading[0], diagFov, inSettings);
+	}
 
 	// measure compute time
 	//computeTime += computeTimer.tick();
@@ -297,10 +223,20 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// draw stars
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
+	glActiveTextureARB(GL_TEXTURE2_ARB);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	glActiveTextureARB(GL_TEXTURE1_ARB);
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	glActiveTextureARB(GL_TEXTURE0_ARB);
 	glBindTexture(GL_TEXTURE_2D, inSettings->flaretex[0]);
 	static float temppos[2];
-	for(i=0; i<inSettings->dStars; i++){
+	for(int i=0; i<inSettings->dStars; i++){
 		temppos[0] = inSettings->stars[i]->pos[0] - inSettings->camPos[0];
 		temppos[1] = inSettings->stars[i]->pos[2] - inSettings->camPos[2];
 		if(temppos[0] > inSettings->depth){
@@ -321,6 +257,7 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 		}
 		inSettings->stars[i]->draw(inSettings->camPos, inSettings->unroll, inSettings->modelMat, inSettings->projMat, inSettings->viewport);
 	}
+	glDisable(GL_CULL_FACE);
 
 	// pick animated texture frame
 	static float textureTime = 0.0f;
@@ -334,79 +271,70 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 	while(inSettings->whichTexture >= inSettings->numAnimTexFrames)
 		inSettings->whichTexture -= inSettings->numAnimTexFrames;
 
-	// draw goo
-	// calculate color
-	static float goo_rgb_phase[3] = {-0.1f, -0.1f, -0.1f};
-	static float goo_rgb_speed[3] = {rsRandf(0.02f) + 0.02f, rsRandf(0.02f) + 0.02f, rsRandf(0.02f) + 0.02f};
-	float goo_rgb[4];
-	for(i=0; i<3; i++){
-		goo_rgb_phase[i] += goo_rgb_speed[i] * inSettings->frameTime;
-		if(goo_rgb_phase[i] >= RS_PIx2)
-			goo_rgb_phase[i] -= RS_PIx2;
-		//goo_rgb[i] = (sinf(goo_rgb_phase[i]) + 1.0f) * 0.5f;
-		goo_rgb[i] = sinf(goo_rgb_phase[i]);
-		if(goo_rgb[i] < 0.0f)
-			goo_rgb[i] = 0.0f;
-	}
 	// alpha component gets normalmap lerp value
-	float lerp = textureTime / texFrameTime;
-	// setup textures
-	if(inSettings->dShaders){
-		goo_rgb[3] = lerp;
-		glDisable(GL_TEXTURE_2D);
-		glEnable(GL_TEXTURE_CUBE_MAP_ARB);
-		glActiveTextureARB(GL_TEXTURE2_ARB);
-		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->nebulatex);
-		glActiveTextureARB(GL_TEXTURE1_ARB);
-		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[(inSettings->whichTexture + 1) % inSettings->numAnimTexFrames]);
-		glActiveTextureARB(GL_TEXTURE0_ARB);
-		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[inSettings->whichTexture]);
-		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->goo_vp);
-		glEnable(GL_VERTEX_PROGRAM_ARB);
-		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->goo_fp);
-		glEnable(GL_FRAGMENT_PROGRAM_ARB);
-	}
-	else{
-		goo_rgb[3] = 1.0f;
-		glBindTexture(GL_TEXTURE_2D, inSettings->nebulatex);
-		glEnable(GL_TEXTURE_2D);
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-		glEnable(GL_TEXTURE_GEN_S);
-		glEnable(GL_TEXTURE_GEN_T);
-	}
-	// update goo function constants
-	for(i=0; i<4; i++){
-		inSettings->goo_cp[i] += inSettings->goo_cs[i] * inSettings->frameTime;
-		if(inSettings->goo_cp[i] >= RS_PIx2)
-			inSettings->goo_cp[i] -= RS_PIx2;
-		inSettings->goo_c[i] = 0.25f * cosf(inSettings->goo_cp[i]);
-	}
-	// draw it
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glEnable(GL_BLEND);
-	glColor4fv(goo_rgb);
-	inSettings->theGoo->draw(&(inSettings->shiftx), &(inSettings->shiftz));
-	if(inSettings->dShaders){
-		glDisable(GL_VERTEX_PROGRAM_ARB);
-		glDisable(GL_FRAGMENT_PROGRAM_ARB);
-		glDisable(GL_TEXTURE_CUBE_MAP_ARB);
-	}
-	else{
-		glDisable(GL_TEXTURE_GEN_S);
-		glDisable(GL_TEXTURE_GEN_T);
+	const float lerp = textureTime / texFrameTime;
+
+	// draw goo
+	if(inSettings->dUseGoo){
+		// calculate color
+		static float goo_rgb_phase[3] = {-0.1f, -0.1f, -0.1f};
+		static float goo_rgb_speed[3] = {rsRandf(0.02f) + 0.02f, rsRandf(0.02f) + 0.02f, rsRandf(0.02f) + 0.02f};
+		float goo_rgb[4];
+		for(int i=0; i<3; i++){
+			goo_rgb_phase[i] += goo_rgb_speed[i] * inSettings->frameTime;
+			if(goo_rgb_phase[i] >= RS_PIx2)
+				goo_rgb_phase[i] -= RS_PIx2;
+			goo_rgb[i] = sinf(goo_rgb_phase[i]);
+			if(goo_rgb[i] < 0.0f)
+				goo_rgb[i] = 0.0f;
+		}
+		// setup textures
+		if(inSettings->dShaders){
+			goo_rgb[3] = lerp;
+			glDisable(GL_TEXTURE_2D);
+			glEnable(GL_TEXTURE_CUBE_MAP_ARB);
+			glActiveTextureARB(GL_TEXTURE2_ARB);
+			glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->nebulatex);
+			glActiveTextureARB(GL_TEXTURE1_ARB);
+			glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[(inSettings->whichTexture + 1) % inSettings->numAnimTexFrames]);
+			glActiveTextureARB(GL_TEXTURE0_ARB);
+			glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[inSettings->whichTexture]);
+			glUseProgramObjectARB(gooProgram);
+		}
+		else{
+			goo_rgb[3] = 1.0f;
+			glBindTexture(GL_TEXTURE_2D, inSettings->nebulatex);
+			glEnable(GL_TEXTURE_2D);
+			glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+			glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+			glEnable(GL_TEXTURE_GEN_S);
+			glEnable(GL_TEXTURE_GEN_T);
+		}
+		// draw it
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		glEnable(GL_BLEND);
+		glColor4fv(goo_rgb);
+		inSettings->theGoo->draw();
+		if(inSettings->dShaders){
+			glDisable(GL_TEXTURE_CUBE_MAP_ARB);
+			glUseProgramObjectARB(0);
+		}
+		else{
+			glDisable(GL_TEXTURE_GEN_S);
+			glDisable(GL_TEXTURE_GEN_T);
+		}
 	}
 
 	// update starburst
 	static float starBurstTime = 300.0f;  // burst after 5 minutes
 	starBurstTime -= inSettings->frameTime;
 	if(starBurstTime <= 0.0f){
-		float pos[] = {inSettings->camPos[0] + (pathDir[0] * inSettings->depth * 0.5f) + rsRandf(inSettings->depth * 0.5f) - inSettings->depth * 0.25f,
+		float pos[] = {inSettings->camPos[0] + (pathDir[0] * inSettings->depth * (0.5f + rsRandf(0.5f))),
 			rsRandf(2.0f) - 1.0f,
-			inSettings->camPos[2] + (pathDir[2] * inSettings->depth * 0.5f) + rsRandf(inSettings->depth * 0.5f) - inSettings->depth * 0.25f};
+			inSettings->camPos[2] + (pathDir[2] * inSettings->depth * (0.5f + rsRandf(0.5f)))};
 		inSettings->theStarBurst->restart(pos);  // it won't actually restart unless it's ready to
-		starBurstTime = rsRandf(540.0f) + 60.0f;  // burst again within 1-10 minutes
+		starBurstTime = rsRandf(240.0f) + 60.0f;  // burst again within 1-5 minutes
 	}
 	if(inSettings->dShaders)
 		inSettings->theStarBurst->draw(lerp, inSettings);
@@ -414,26 +342,25 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 		inSettings->theStarBurst->draw(inSettings);
 
 	// draw tunnel
-	inSettings->theTunnel->make(inSettings->frameTime);
-	glEnable(GL_TEXTURE_2D);
-	if(inSettings->dShaders){
-		glActiveTextureARB(GL_TEXTURE1_ARB);
-		glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[(inSettings->whichTexture + 1) % inSettings->numAnimTexFrames]);
-		glActiveTextureARB(GL_TEXTURE0_ARB);
-		glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[inSettings->whichTexture]);
-		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->tunnel_vp);
-		glEnable(GL_VERTEX_PROGRAM_ARB);
-		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->tunnel_fp);
-		glEnable(GL_FRAGMENT_PROGRAM_ARB);
-		inSettings->theTunnel->draw(lerp);
-	}
-	else{
-		glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[inSettings->whichTexture]);
-		inSettings->theTunnel->draw();
-	}
-	if(inSettings->dShaders){
-		glDisable(GL_VERTEX_PROGRAM_ARB);
-		glDisable(GL_FRAGMENT_PROGRAM_ARB);
+	if(inSettings->dUseTunnels){
+		inSettings->theTunnel->make(inSettings->frameTime, inSettings->dShaders);
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_TEXTURE_2D);
+		if(inSettings->dShaders){
+			glActiveTextureARB(GL_TEXTURE1_ARB);
+			glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[(inSettings->whichTexture + 1) % inSettings->numAnimTexFrames]);
+			glActiveTextureARB(GL_TEXTURE0_ARB);
+			glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[inSettings->whichTexture]);
+			glUseProgramObjectARB(tunnelProgram);
+			inSettings->theTunnel->draw(lerp);
+			glUseProgramObjectARB(0);
+		}
+		else{
+			glBindTexture(GL_TEXTURE_2D, inSettings->theCausticTextures->caustictex[inSettings->whichTexture]);
+			inSettings->theTunnel->draw();
+		}
+		glDisable(GL_CULL_FACE);
 	}
 
 	// draw sun with lens flare
@@ -456,13 +383,13 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 	static std::vector<std::string> strvec;
 	static int frames = 0;
 	++frames;
-	if(frames == 20){
+	if(frames == 60){
 		strvec.clear();
-		std::string str1 = "         FPS = " + to_string(20.0f / totalTime);
+		std::string str1 = "         FPS = " + to_string(60.0f / totalTime);
 		strvec.push_back(str1);
-		std::string str2 = "compute time = " + to_string(computeTime / 20.0f);
+		std::string str2 = "compute time = " + to_string(computeTime / 60.0f);
 		strvec.push_back(str2);
-		std::string str3 = "   draw time = " + to_string(drawTime / 20.0f);
+		std::string str3 = "   draw time = " + to_string(drawTime / 60.0f);
 		strvec.push_back(str3);
 		totalTime = 0.0f;
 		computeTime = 0.0f;
@@ -487,8 +414,13 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 	}
-
-	//wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+	
+#ifdef WIN32
+	wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+#endif
+#ifdef RS_XSCREENSAVER
+	glXSwapBuffers(xdisplay, xwindow);
+#endif
 }
 
 
@@ -502,54 +434,46 @@ __private_extern__ void draw(HyperspaceSaverSettings *inSettings){
 }*/
 
 
-__private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings *inSettings){
-	int i, j;
-	//RECT rect;
+void setDefaults(HyperspaceSaverSettings *inSettings){
+	inSettings->dSpeed = 10;
+	inSettings->dStars = 2000;
+	inSettings->dStarSize = 10;
+	inSettings->dResolution = 10;
+	inSettings->dDepth = 5;
+	inSettings->dFov = 50;
+	inSettings->dUseTunnels = 1;
+	inSettings->dUseGoo = 1;
+	inSettings->dShaders = 1;
+}
 
-	// Seed random number generator
-	srand((unsigned)time(NULL));
-	rand(); rand(); rand(); rand(); rand();
-	rand(); rand(); rand(); rand(); rand();
-	rand(); rand(); rand(); rand(); rand();
-	rand(); rand(); rand(); rand(); rand();
 
-	// Limit memory consumption because the Windows previewer is just too darn slow
-	/*if(doingPreview){
-		dResolution = 6;
-		if(dDepth > 3)
-			dDepth = 3;
-	};*/
+#ifdef RS_XSCREENSAVER
+void handleCommandLine(int argc, char* argv[]){
+	setDefaults();
+	getArgumentsValue(argc, argv, std::string("-speed"), dSpeed, 1, 100);
+	getArgumentsValue(argc, argv, std::string("-stars"), dStars, 0, 10000);
+	getArgumentsValue(argc, argv, std::string("-starsize"), dStarSize, 1, 100);
+	getArgumentsValue(argc, argv, std::string("-resolution"), dResolution, 4, 20);
+	getArgumentsValue(argc, argv, std::string("-depth"), dDepth, 1, 10);
+	getArgumentsValue(argc, argv, std::string("-fov"), dFov, 10, 150);
+	getArgumentsValue(argc, argv, std::string("-usetunnels"), dUseTunnels, 0, 1);
+	getArgumentsValue(argc, argv, std::string("-usegoo"), dUseGoo, 0, 1);
+	getArgumentsValue(argc, argv, std::string("-shaders"), dShaders, 0, 1);
+}
+#endif
 
-	// Window initialization
-	/*hdc = GetDC(hwnd);
-	SetBestPixelFormat(hdc);
-	hglrc = wglCreateContext(hdc);
-	GetClientRect(hwnd, &rect);
-	wglMakeCurrent(hdc, hglrc);
-	xsize = rect.right;
-	ysize = rect.bottom;*/
+
+void reshape(int width, int height, HyperspaceSaverSettings *inSettings){
+	glViewport(0, 0, width, height);
+	inSettings->aspectRatio = float(width) / float(height);
+
 	inSettings->xsize = width;
 	inSettings->ysize = height;
-	glViewport(0, 0, inSettings->xsize, inSettings->ysize);
-	glGetIntegerv(GL_VIEWPORT, inSettings->viewport);
-	inSettings->aspectRatio = float(inSettings->xsize) / float(inSettings->ysize);
 
-	// Set up some other inSettings defaults...
-	inSettings->camPos[0] = 0.0f;
-	inSettings->camPos[1] = 0.0f;
-	inSettings->camPos[2] = 0.0f;
-	inSettings->numAnimTexFrames = 20;
-	inSettings->whichTexture = 0;
-	inSettings->goo_cp[0] = 0.0f;
-	inSettings->goo_cp[1] = 1.0f;
-	inSettings->goo_cp[2] = 2.0f;
-	inSettings->goo_cp[3] = 3.0f;
-	
-	// setup viewport
-	/*viewport[0] = rect.left;
-	viewport[1] = rect.top;
-	viewport[2] = rect.right - rect.left;
-	viewport[3] = rect.bottom - rect.top;*/
+	inSettings->viewport[0] = 0;
+	inSettings->viewport[1] = 0;
+	inSettings->viewport[2] = width;
+	inSettings->viewport[3] = height;
 
 	// setup projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -557,10 +481,51 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 	gluPerspective(float(inSettings->dFov), inSettings->aspectRatio, 0.001f, 200.0f);
 	glGetDoublev(GL_PROJECTION_MATRIX, inSettings->projMat);
 	glMatrixMode(GL_MODELVIEW);
+}
+
+
+#ifdef WIN32
+void initSaver(HWND hwnd){
+	RECT rect;
+
+	// Window initialization
+	hdc = GetDC(hwnd);
+	setBestPixelFormat(hdc);
+	hglrc = wglCreateContext(hdc);
+	GetClientRect(hwnd, &rect);
+	wglMakeCurrent(hdc, hglrc);
+	
+	// setup viewport
+	//viewport[0] = rect.left;
+	//viewport[1] = rect.top;
+	//viewport[2] = rect.right - rect.left;
+	//viewport[3] = rect.bottom - rect.top;
 
 	// initialize extensions
-	/*if(!initExtensions())
-		dShaders = false;*/
+	if(!initExtensions())
+		dShaders = 0;
+
+	reshape(rect.right, rect.bottom);
+#endif
+//#ifdef RS_XSCREENSAVER
+void initSaver(HyperspaceSaverSettings *inSettings){
+//#endif
+	// Seed random number generator
+	srand((unsigned)time(NULL));
+
+	// Limit memory consumption because the Windows previewer is just too darn slow
+	/*if(doingPreview){
+		dResolution = 6;
+		if(dDepth > 3)
+			dDepth = 3;
+	};*/
+	
+	// Set up some other inSettings defaults...
+	inSettings->camPos[0] = 0.0f;
+	inSettings->camPos[1] = 0.0f;
+	inSettings->camPos[2] = 0.0f;
+	inSettings->numAnimTexFrames = 20;
+	inSettings->whichTexture = 0;
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -570,23 +535,31 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 
 	inSettings->thePath = new splinePath((inSettings->dDepth * 2) + 6);
 
-	inSettings->theTunnel = new tunnel(inSettings->thePath, 20);
+	if(inSettings->dUseTunnels)
+		inSettings->theTunnel = new tunnel(inSettings->thePath, 20);
 
 	// To avoid popping, depth, which will be used for fogging, is set to
 	// dDepth * goo grid size - size of one goo cubelet
 	inSettings->depth = float(inSettings->dDepth) * 2.0f - 2.0f / float(inSettings->dResolution);
 
-	inSettings->theGoo = new goo(inSettings->dResolution, inSettings->depth, gooFunction, inSettings);
-	for(i=0; i<4; i++)
-		inSettings->goo_cs[i] = 0.1f + rsRandf(0.4f);
+	if(inSettings->dUseGoo)
+		inSettings->theGoo = new goo(inSettings->dResolution, inSettings->depth);
 
 	inSettings->stars = new stretchedParticle*[inSettings->dStars];
-	for(i=0; i<inSettings->dStars; i++){
+	for(int i=0; i<inSettings->dStars; i++){
 		inSettings->stars[i] = new stretchedParticle;
-		inSettings->stars[i]->radius = rsRandf(float(inSettings->dStarSize) * 0.001f) + float(inSettings->dStarSize) * 0.001f;
-		inSettings->stars[i]->color[0] = 0.5f + rsRandf(0.5f);
-		inSettings->stars[i]->color[1] = 0.5f + rsRandf(0.5f);
-		inSettings->stars[i]->color[2] = 0.5f + rsRandf(0.5f);
+		inSettings->stars[i]->radius = rsRandf(float(inSettings->dStarSize) * 0.0005f) + float(inSettings->dStarSize) * 0.0005f;
+		if(i % 10){  // usually bland stars
+			inSettings->stars[i]->color[0] = 0.8f + rsRandf(0.2f);
+			inSettings->stars[i]->color[1] = 0.8f + rsRandf(0.2f);
+			inSettings->stars[i]->color[2] = 0.8f + rsRandf(0.2f);
+		}
+		else{  // occasionally a colorful one
+			inSettings->stars[i]->color[0] = 0.3f + rsRandf(0.7f);
+			inSettings->stars[i]->color[1] = 0.3f + rsRandf(0.7f);
+			inSettings->stars[i]->color[2] = 0.3f + rsRandf(0.7f);
+			inSettings->stars[i]->color[rsRandi(3)] = 1.0f;
+		}
 		inSettings->stars[i]->color[rsRandi(3)] = 1.0f;
 		inSettings->stars[i]->pos[0] = rsRandf(2.0f * inSettings->depth) - inSettings->depth;
 		inSettings->stars[i]->pos[1] = rsRandf(4.0f) - 2.0f;
@@ -602,28 +575,13 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 	inSettings->sunStar->fov = float(inSettings->dFov);
 
 	inSettings->theStarBurst = new starBurst;
-	for(i=0; i<SB_NUM_STARS; i++)
+	for(int i=0; i<SB_NUM_STARS; i++)
 		inSettings->theStarBurst->stars[i]->radius = rsRandf(float(inSettings->dStarSize) * 0.001f) + float(inSettings->dStarSize) * 0.001f;
 
-	glGenTextures(1, &(inSettings->nebulatex));
+	glGenTextures(1, &inSettings->nebulatex);
 	if(inSettings->dShaders){
+		initShaders();
 		inSettings->numAnimTexFrames = 20;
-		//unsigned char* goo_vp_asm = readShaderFile("goo.vp");
-		glGenProgramsARB(1, &(inSettings->goo_vp));
-		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->goo_vp);
-		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)goo_vp_asm)), goo_vp_asm);
-		//unsigned char* ggoo_fp_asm = readShaderFile("goo.fp");
-		glGenProgramsARB(1, &(inSettings->goo_fp));
-		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->goo_fp);
-		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)goo_fp_asm)), goo_fp_asm);
-		//unsigned char* tunnel_vp_asm = readShaderFile("tunnel.vp");
-		glGenProgramsARB(1, &(inSettings->tunnel_vp));
-		glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->tunnel_vp);
-		glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)tunnel_vp_asm)), tunnel_vp_asm);
-		//unsigned char* ttunnel_fp_asm = readShaderFile("tunnel.fp");
-		glGenProgramsARB(1, &(inSettings->tunnel_fp));
-		glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->tunnel_fp);
-		glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, GLsizei(strlen((const char *)tunnel_fp_asm)), tunnel_fp_asm);
 		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->nebulatex);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -641,8 +599,8 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 		inSettings->numAnimTexFrames = 60;
 		float x, y, temp;
 		const int halfsize(NEBULAMAPSIZE / 2);
-		for(i=0; i<NEBULAMAPSIZE; ++i){
-			for(j=0; j<NEBULAMAPSIZE; ++j){
+		for(int i=0; i<NEBULAMAPSIZE; ++i){
+			for(int j=0; j<NEBULAMAPSIZE; ++j){
 				x = float(i - halfsize) / float(halfsize);
 				y = float(j - halfsize) / float(halfsize);
 				temp = (x * x) + (y * y);
@@ -657,6 +615,7 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 				nebulamap[i][j][2] = GLubyte(float(nebulamap[i][j][2]) * temp);
 			}
 		}
+		glEnable(GL_NORMALIZE);
 		glBindTexture(GL_TEXTURE_2D, inSettings->nebulatex);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -674,38 +633,47 @@ __private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings
 	inSettings->textwriter = new rsText;
 
 	//outfile.open("outfile");
-	inSettings->firstDraw = true;
+
+	inSettings->readyToDraw = 1;
 }
 
 
-__private_extern__ void cleanUp(HyperspaceSaverSettings *inSettings){
+//#ifdef RS_XSCREENSAVER
+void cleanUp(HyperspaceSaverSettings *inSettings){
 	// Free memory
-	delete inSettings->theGoo;
-	delete inSettings->theTunnel;
+	if(inSettings->dUseGoo)
+		delete inSettings->theGoo;
+	if(inSettings->dUseTunnels){
+		delete inSettings->theTunnel;
+		delete inSettings->theCausticTextures;
+	}
 	delete inSettings->thePath;
-	delete inSettings->theCausticTextures;
 	delete inSettings->theWNCM;
+}
+//#endif
+
+
+/*#ifdef WIN32
+void cleanUp(HWND hwnd){
+	// Free memory
+	if(dUseGoo)
+		delete theGoo;
+	if(dUseTunnels){
+		delete theTunnel;
+		delete theCausticTextures;
+	}
+	delete thePath;
+	delete theWNCM;
 
 	// Kill device context
-	/*ReleaseDC(hwnd, hdc);
+	ReleaseDC(hwnd, hdc);
 	wglMakeCurrent(NULL, NULL);
-	wglDeleteContext(hglrc);*/
-}
-
-
-__private_extern__ void setDefaults(HyperspaceSaverSettings *inSettings){
-	inSettings->dSpeed = 10;
-	inSettings->dStars = 1000;
-	inSettings->dStarSize = 10;
-	inSettings->dResolution = 10;
-	inSettings->dDepth = 5;
-	inSettings->dFov = 50;
-	inSettings->dShaders = RSSShadersSupported();	// don't enable shaders for older versions of Mac OS X
+	wglDeleteContext(hglrc);
 }
 
 
 // Initialize all user-defined stuff
-/*void readRegistry(){
+void readRegistry(){
 	LONG result;
 	HKEY skey;
 	DWORD valtype, valsize, val;
@@ -736,6 +704,12 @@ __private_extern__ void setDefaults(HyperspaceSaverSettings *inSettings){
 	result = RegQueryValueEx(skey, "Fov", 0, &valtype, (LPBYTE)&val, &valsize);
 	if(result == ERROR_SUCCESS)
 		dFov = val;
+	result = RegQueryValueEx(skey, "UseTunnels", 0, &valtype, (LPBYTE)&val, &valsize);
+	if(result == ERROR_SUCCESS)
+		dUseTunnels = val;
+	result = RegQueryValueEx(skey, "UseGoo", 0, &valtype, (LPBYTE)&val, &valsize);
+	if(result == ERROR_SUCCESS)
+		dUseGoo = val;
 	result = RegQueryValueEx(skey, "Shaders", 0, &valtype, (LPBYTE)&val, &valsize);
 	if(result == ERROR_SUCCESS)
 		dShaders = val;
@@ -769,6 +743,10 @@ void writeRegistry(){
 	RegSetValueEx(skey, "Depth", 0, REG_DWORD, (CONST BYTE*)&val, sizeof(val));
 	val = dFov;
 	RegSetValueEx(skey, "Fov", 0, REG_DWORD, (CONST BYTE*)&val, sizeof(val));
+	val = dUseTunnels;
+	RegSetValueEx(skey, "UseTunnels", 0, REG_DWORD, (CONST BYTE*)&val, sizeof(val));
+	val = dUseGoo;
+	RegSetValueEx(skey, "UseGoo", 0, REG_DWORD, (CONST BYTE*)&val, sizeof(val));
 	val = dShaders;
 	RegSetValueEx(skey, "Shaders", 0, REG_DWORD, (CONST BYTE*)&val, sizeof(val));
 	val = dFrameRateLimit;
@@ -804,6 +782,10 @@ BOOL aboutProc(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
 void initControls(HWND hdlg){
 	char cval[16];
 
+	CheckDlgButton(hdlg, USETUNNELS, dUseTunnels);
+	CheckDlgButton(hdlg, USEGOO, dUseGoo);
+	CheckDlgButton(hdlg, USESHADERS, dShaders);
+
 	SendDlgItemMessage(hdlg, SPEED, TBM_SETRANGE, 0, LPARAM(MAKELONG(DWORD(1), DWORD(100))));
 	SendDlgItemMessage(hdlg, SPEED, TBM_SETPOS, 1, LPARAM(dSpeed));
 	SendDlgItemMessage(hdlg, SPEED, TBM_SETLINESIZE, 0, LPARAM(1));
@@ -829,6 +811,10 @@ void initControls(HWND hdlg){
 	SendDlgItemMessage(hdlg, RESOLUTION, TBM_SETPOS, 1, LPARAM(dResolution));
 	SendDlgItemMessage(hdlg, RESOLUTION, TBM_SETLINESIZE, 0, LPARAM(1));
 	SendDlgItemMessage(hdlg, RESOLUTION, TBM_SETPAGESIZE, 0, LPARAM(2));
+	if(dUseGoo)
+		EnableWindow(GetDlgItem(hdlg, RESOLUTION), TRUE);
+	else
+		EnableWindow(GetDlgItem(hdlg, RESOLUTION), FALSE);
 	sprintf(cval, "%d", dResolution);
 	SendDlgItemMessage(hdlg, RESOLUTIONTEXT, WM_SETTEXT, 0, LPARAM(cval));
 
@@ -846,13 +832,11 @@ void initControls(HWND hdlg){
 	sprintf(cval, "%d", dFov);
 	SendDlgItemMessage(hdlg, FOVTEXT, WM_SETTEXT, 0, LPARAM(cval));
 
-	CheckDlgButton(hdlg, SHADERS, dShaders);
-
 	initFrameRateLimitSlider(hdlg, FRAMERATELIMIT, FRAMERATELIMITTEXT);
 }
 
 
-BOOL ScreenSaverConfigureDialog(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
+BOOL screenSaverConfigureDialog(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
 	int ival;
 	char cval[16];
 
@@ -871,7 +855,9 @@ BOOL ScreenSaverConfigureDialog(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
 			dResolution = SendDlgItemMessage(hdlg, RESOLUTION, TBM_GETPOS, 0, 0);
 			dDepth = SendDlgItemMessage(hdlg, DEPTH, TBM_GETPOS, 0, 0);
 			dFov = SendDlgItemMessage(hdlg, FOV, TBM_GETPOS, 0, 0);
-			dShaders = (IsDlgButtonChecked(hdlg, SHADERS) == BST_CHECKED);
+			dUseTunnels = (IsDlgButtonChecked(hdlg, USETUNNELS) == BST_CHECKED);
+			dUseGoo = (IsDlgButtonChecked(hdlg, USEGOO) == BST_CHECKED);
+			dShaders = (IsDlgButtonChecked(hdlg, USESHADERS) == BST_CHECKED);
 			dFrameRateLimit = SendDlgItemMessage(hdlg, FRAMERATELIMIT, TBM_GETPOS, 0, 0);
 			writeRegistry();
             // Fall through
@@ -884,6 +870,12 @@ BOOL ScreenSaverConfigureDialog(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
 			break;
 		case ABOUT:
 			DialogBox(mainInstance, MAKEINTRESOURCE(DLG_ABOUT), hdlg, DLGPROC(aboutProc));
+			break;
+		case USEGOO:
+			if(IsDlgButtonChecked(hdlg, USEGOO) == BST_CHECKED)
+				EnableWindow(GetDlgItem(hdlg, RESOLUTION), TRUE);
+			else
+				EnableWindow(GetDlgItem(hdlg, RESOLUTION), FALSE);
 			break;
 		}
         return TRUE;
@@ -926,17 +918,18 @@ BOOL ScreenSaverConfigureDialog(HWND hdlg, UINT msg, WPARAM wpm, LPARAM lpm){
 }
 
 
-LONG ScreenSaverProc(HWND hwnd, UINT msg, WPARAM wpm, LPARAM lpm){
+LONG screenSaverProc(HWND hwnd, UINT msg, WPARAM wpm, LPARAM lpm){
 	switch(msg){
 	case WM_CREATE:
 		readRegistry();
 		initSaver(hwnd);
-		readyToDraw = 1;
 		break;
 	case WM_DESTROY:
 		readyToDraw = 0;
 		cleanUp(hwnd);
 		break;
 	}
-	return DefScreenSaverProc(hwnd, msg, wpm, lpm);
-}*/
+	return defScreenSaverProc(hwnd, msg, wpm, lpm);
+}
+#endif
+ */

@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,26 +19,17 @@
  */
 
 
-/*#ifdef WIN32
-	#include <windows.h>
+#ifdef WIN32
+#include <windows.h>
+#include <Hyperspace/extensions.h>
 #endif
+
 #include <Hyperspace/starBurst.h>
-#include <rsMath/rsMath.h>
-#include <math.h>
 #include <Hyperspace/wavyNormalCubeMaps.h>
 #include <Hyperspace/flare.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-//#include <Hyperspace/extgl.h>
-#include <Hyperspace/extensions.h>*/
-#include "starBurst.h"
-#include "rsMath.h"
-#include <math.h>
-#include "wavyNormalCubeMaps.h"
-#include "flare.h"
+#include <rsMath/rsMath.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include <OpenGL/glext.h>
 
 
 
@@ -50,10 +42,9 @@ extern wavyNormalCubeMaps* theWNCM;
 extern unsigned int nebulatex;
 extern unsigned int goo_vp, goo_fp;
 extern int whichTexture;
-extern float depth;
-extern bool dShaders;*/
-
-
+extern float depth;*/
+extern GLhandleARB gooProgram;
+extern GLhandleARB tunnelProgram;
 
 
 starBurst::starBurst(){
@@ -238,10 +229,7 @@ void starBurst::draw(float lerp, HyperspaceSaverSettings *inSettings){
 	glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[(inSettings->whichTexture + 1) % inSettings->numAnimTexFrames]);
 	glActiveTextureARB(GL_TEXTURE0_ARB);
 	glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, inSettings->theWNCM->texture[inSettings->whichTexture]);
-	glBindProgramARB(GL_VERTEX_PROGRAM_ARB, inSettings->goo_vp);
-	glEnable(GL_VERTEX_PROGRAM_ARB);
-	glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, inSettings->goo_fp);
-	glEnable(GL_FRAGMENT_PROGRAM_ARB);
+	glUseProgramObjectARB(gooProgram);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glEnable(GL_BLEND);
@@ -249,8 +237,7 @@ void starBurst::draw(float lerp, HyperspaceSaverSettings *inSettings){
 	glCallList(call_list);
 
 	glDisable(GL_TEXTURE_CUBE_MAP_ARB);
-	glDisable(GL_VERTEX_PROGRAM_ARB);
-	glDisable(GL_FRAGMENT_PROGRAM_ARB);
+	glUseProgramObjectARB(0);
 
 	glPopMatrix();
 }

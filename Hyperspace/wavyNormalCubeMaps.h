@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,12 +24,9 @@
 
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <Hyperspace/extensions.h>*/
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <OpenGL/glext.h>

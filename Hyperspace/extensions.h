@@ -19,38 +19,32 @@
  */
 
 
-#ifndef STARBURST_H
-#define STARBURST_H
+#ifndef EXTENSIONS_H
+#define EXTENSIONS_H
 
 
+/*#ifdef WIN32
+#include <windows.h>
+#endif
 
-#include "stretchedParticle.h"
-#include "Hyperspace.h"
-
-
-
-#define SB_NUM_STARS 200
-
+#include <GL/gl.h>
+#include <GL/glext.h>
 
 
-class starBurst{
-public:
-	stretchedParticle** stars;
-	// stars only stay active while they're within viewing range
-	bool* stars_active;
-	float** stars_velocity;
-	unsigned int call_list;
-	float size;
-	float pos[3];
+extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
+extern PFNGLCREATESHADEROBJECTARBPROC glCreateShaderObjectARB;
+extern PFNGLSHADERSOURCEARBPROC glShaderSourceARB;
+extern PFNGLCOMPILESHADERARBPROC glCompileShaderARB;
+extern PFNGLCREATEPROGRAMOBJECTARBPROC glCreateProgramObjectARB;
+extern PFNGLATTACHOBJECTARBPROC glAttachObjectARB;
+extern PFNGLLINKPROGRAMARBPROC glLinkProgramARB;
+extern PFNGLUSEPROGRAMOBJECTARBPROC glUseProgramObjectARB;
+extern PFNGLGETUNIFORMLOCATIONARBPROC glGetUniformLocationARB;
+extern PFNGLUNIFORM1IARBPROC glUniform1iARB;
 
-	starBurst();
-	~starBurst();
-	void restart(float* position);
-	void drawStars(HyperspaceSaverSettings *inSettings);
-	void draw(HyperspaceSaverSettings *inSettings);  // draw regular
-	void draw(float lerp, HyperspaceSaverSettings *inSettings);  // draw with shaders
-};
 
+int initExtensions();*/
+int queryExtension(const char* name);
 
 
 #endif

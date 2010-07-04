@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,11 +19,8 @@
  */
 
 
-/*#include <Hyperspace/wavyNormalCubeMaps.h>
+#include <Hyperspace/wavyNormalCubeMaps.h>
 #include <rsMath/rsMath.h>
-#include <math.h>*/
-#include "wavyNormalCubeMaps.h"
-#include "rsMath.h"
 #include <math.h>
 
 
@@ -43,7 +41,6 @@ wavyNormalCubeMaps::wavyNormalCubeMaps(int frames, int size){
 	float vec[3];
 	float norm[3];
 	float offset = -0.5f * float(texSize) + 0.5f;
-	//float mult = 0.5f / float(texSize);
 	for(g=0; g<numFrames; g++){
 		glBindTexture(GL_TEXTURE_CUBE_MAP_ARB, texture[g]);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -157,12 +154,12 @@ void wavyNormalCubeMaps::wavyfunc(float* point, float* normal){
 	for(int i=0; i<3; i++)
 		normal[i] = point[i];
 
-	normal[0] += 0.3f * rsCosf((1.0f * point[0] + 4.0f * point[1]) * RS_PI + phase)
-		+ 0.15f * rsCosf((3.0f * point[1] + 13.0f * point[2]) * RS_PI - phase);
-	normal[1] += 0.3f * rsCosf((2.0f * point[1] - 5.0f * point[2]) * RS_PI + phase)
-		+ 0.15f * rsCosf((2.0f * point[2] + 12.0f * point[0]) * RS_PI - phase);
-	normal[2] += 0.3f * rsCosf((1.0f * point[2] + 6.0f * point[0]) * RS_PI + phase)
-		+ 0.15f * rsCosf((1.0f * point[0] - 11.0f * point[1]) * RS_PI - phase);
+	normal[0] += 0.2f * rsCosf((1.0f * point[0] + 4.0f * point[1]) * RS_PI + phase)
+		+ 0.1f * rsCosf((3.0f * point[1] + 13.0f * point[2]) * RS_PI - phase);
+	normal[1] += 0.2f * rsCosf((2.0f * point[1] - 5.0f * point[2]) * RS_PI + phase)
+		+ 0.1f * rsCosf((2.0f * point[2] + 12.0f * point[0]) * RS_PI - phase);
+	normal[2] += 0.2f * rsCosf((1.0f * point[2] + 6.0f * point[0]) * RS_PI + phase)
+		+ 0.1f * rsCosf((1.0f * point[0] - 11.0f * point[1]) * RS_PI - phase);
 
 	normalize(normal);
 }

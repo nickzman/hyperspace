@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,15 +19,10 @@
  */
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
 #endif
 #include <Hyperspace/stretchedParticle.h>
-#include <stdio.h>
-#include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>*/
-#include "stretchedParticle.h"
 #include <stdio.h>
 #include <math.h>
 #include <OpenGL/gl.h>
@@ -101,7 +97,7 @@ void stretchedParticle::draw(float* eyepoint, float unroll, double *modelMat, do
 		glMultMatrixf(bbMat);
 		glRotatef(57.2957795131f * atan2f(sd[1], sd[0]) + unroll, 0, 0, 1);
 		glScalef(stretch, 1.0f, 1.0f);
-		float darkener = stretch * 0.5f;
+		float darkener = stretch * 0.3f;
 		if(darkener < 1.0f)
 			darkener = 1.0f;
 		// draw colored aura

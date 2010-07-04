@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2010  Terence M. Welsh
+ * Copyright (C) 2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
@@ -19,11 +19,11 @@
  */
 
 
-#include <Implicit/impHexahedron.h>
+#include <Implicit/impRoundedHexahedron.h>
 
 
 
-float impHexahedron::value(float* position){
+float impRoundedHexahedron::value(float* position){
 	const float& x(position[0]);
 	const float& y(position[1]);
 	const float& z(position[2]);
@@ -32,11 +32,20 @@ float impHexahedron::value(float* position){
 	const float ty(x * invtrmat[4] + y * invtrmat[5] + z * invtrmat[6] + invtrmat[7]);
 	const float tz(x * invtrmat[8] + y * invtrmat[9] + z * invtrmat[10] + invtrmat[11]);
 
-	const float xx(1.0f / (tx * tx + IMP_MIN_DIVISOR));
-	const float yy(1.0f / (ty * ty + IMP_MIN_DIVISOR));
-	const float zz(1.0f / (tz * tz + IMP_MIN_DIVISOR));
-	if(xx < yy)
-		return (xx < zz) ? xx : zz;
-	else
-		return (yy < zz) ? yy : zz;
+	// Compute shrunken values.
+	/*const float xx(fabsf(tx) - width);
+	const float sx((xx < 0.0f) ? 0.0f : xx);
+	const float yy(fabsf(ty) - height);
+	const float sy((yy < 0.0f) ? 0.0f : yy);
+	const float zz(fabsf(tz) - length);
+	const float sz((zz < 0.0f) ? 0.0f : zz);*/
+	// rewritten with fewer conditionals
+	const float xx(fabsf(tx) - width);
+	const float yy(fabsf(ty) - height);
+	const float zz(fabsf(tz) - length);
+	const float sx(xx * (xx > 0.0f));
+	const float sy(yy * (yy > 0.0f));
+	const float sz(zz * (zz > 0.0f));
+
+	return thicknessSquared / (sx*sx + sy*sy + sz*sz + IMP_MIN_DIVISOR);
 }

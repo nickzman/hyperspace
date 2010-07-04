@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 1999-2005  Terence M. Welsh
+ * Copyright (C) 1999-2010  Terence M. Welsh
  *
  * This file is part of rsMath.
  *
  * rsMath is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * rsMath is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,9 +20,7 @@
 
 
 
-/*#include <rsMath/rsMath.h>
-#include <math.h>*/
-#include "rsMath.h"
+#include <rsMath/rsMath.h>
 #include <math.h>
 
 
@@ -64,7 +63,7 @@ void rsQuat::copy(rsQuat copyquat){
 
 
 void rsQuat::make(float a, float x, float y, float z){
-	if(a < RSEPSILON && a > -RSEPSILON){
+	if(a < RS_EPSILON && a > -RS_EPSILON){
 		q[0] = 0.0f;
 		q[1] = 0.0f;
 		q[2] = 0.0f;
@@ -82,7 +81,7 @@ void rsQuat::make(float a, float x, float y, float z){
 
 
 void rsQuat::make(float a, const rsVec &v){
-	if(a < RSEPSILON && a > -RSEPSILON){
+	if(a < RS_EPSILON && a > -RS_EPSILON){
 		q[0] = 0.0f;
 		q[1] = 0.0f;
 		q[2] = 0.0f;
@@ -279,8 +278,8 @@ void rsQuat::slerp(rsQuat a, rsQuat b, float t){
 	float n, cn, sn, scalea, scaleb;
 
 	cn = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-	if((1.0f + cn) > RSEPSILON){
-		if((1.0f - cn) > RSEPSILON){
+	if((1.0f + cn) > RS_EPSILON){
+		if((1.0f - cn) > RS_EPSILON){
 			n = acosf(cn);
 			sn = sinf(n);
 			scalea = sinf((1.0f - t) * n) / sn;

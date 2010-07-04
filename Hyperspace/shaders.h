@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,133 +23,138 @@
 #define SHADERS_H
 
 
-
-const char* goo_vp_asm = {
-"!!ARBvp1.0\n"
-
-"PARAM mvp[4] = { state.matrix.mvp };\n"
-"PARAM mvit[4] = { state.matrix.modelview.invtrans };\n"
-
-"TEMP oPos, fogtemp;\n"
-
-"DP4 oPos.x, mvp[0], vertex.position;\n"
-"DP4 oPos.y, mvp[1], vertex.position;\n"
-"DP4 oPos.z, mvp[2], vertex.position;\n"
-"DP4 oPos.w, mvp[3], vertex.position;\n"
-"MOV result.position, oPos;\n"
-
-"MOV result.color, vertex.color;\n"
-
-"MOV result.texcoord[0], vertex.normal;\n"
-
-"# vector pointing at eye;\n"
-"SUB result.texcoord[1], mvit[3], vertex.position;\n"
-
-"SUB fogtemp, state.fog.params.z, oPos.z;\n"
-"MUL result.fogcoord.x, fogtemp.x, state.fog.params.w;\n"
-
-"END\n"
-};
+#ifdef WIN32
+#include <windows.h>
+#include <Hyperspace/extensions.h>
+#endif
+#include <OpenGL/gl.h>
+#include <string>
 
 
-const char* goo_fp_asm = {
-"!!ARBfp1.0\n"
+const std::string gooVertSource(
+"varying vec4 vsPosition;\n"
+"varying vec4 gl_TexCoord[1];\n"
+"void main(void){\n"
+"	vsPosition = gl_ModelViewMatrix * gl_Vertex;\n"
+"	gl_FrontColor = gl_Color;\n"
+"	gl_BackColor = gl_Color;\n"
+"	gl_TexCoord[0] = vec4(gl_Normal, 1.0);\n"
+"	gl_Position = ftransform();\n"
+"}\n"
+);
 
-"TEMP total, temp, eye_vec, norm, ref_vec, cube_vec, alpha;\n"
-
-"# get normal from normal map\n"
-"TEX norm, fragment.texcoord[0], texture[0], CUBE;\n"
-"# remap to {-1, 1}\n"
-"MAD norm, norm, 2.0, -1.0;\n"
-"# get normal from normal map\n"
-"TEX temp, fragment.texcoord[0], texture[1], CUBE;\n"
-"# remap to {-1, 1}\n"
-"MAD temp, temp, 2.0, -1.0;\n"
-"# lerp between normals\n"
-"LRP norm, fragment.color.a, temp, norm;\n"
-
-"# normalize eye vector\n"
-"DP3 temp.x, fragment.texcoord[1], fragment.texcoord[1];\n"
-"RSQ temp.x, temp.x;\n"
-"MUL eye_vec, fragment.texcoord[1], temp.x;\n"
-
-"# calculate reflection vector\n"
-"DP3 temp.x, eye_vec, norm;\n"
-"MUL temp.x, temp.x, 2.0;\n"
-"MUL temp, norm, temp.x;\n"
-"SUB ref_vec, temp, eye_vec;\n"
-
-"# use reflection vector to find fragment color\n"
-"TEX total, ref_vec, texture[2], CUBE;\n"
-
-"# modulate with vertex color\n"
-"MUL_SAT total, total, fragment.color;\n"
-
-"# fresnel alpha\n"
-"DP3 alpha.a, norm, eye_vec;\n"
-"ABS alpha.a, alpha.a;\n"
-"SUB alpha.a, 1.0, alpha.a;\n"
-"MUL_SAT total.a, alpha.a, alpha.a;\n"
-
-"# fog\n"
-"LRP result.color, fragment.fogcoord.x, total, state.fog.color;\n"
-
-"END\n"
-};
+const std::string gooFragSource(
+"varying vec4 vsPosition;\n"
+"varying vec4 gl_TexCoord[1];\n"
+"uniform samplerCube normaltex0;\n"
+"uniform samplerCube normaltex1;\n"
+"uniform samplerCube tex;\n"
+"void main(void){\n"
+"	vec4 normal0 = textureCube(normaltex0, gl_TexCoord[0].xyz) * 2.0 - 1.0;\n"
+"	vec4 normal1 = textureCube(normaltex1, gl_TexCoord[0].xyz) * 2.0 - 1.0;\n"
+"	vec4 texnormal = mix(normal0, normal1, gl_Color.a);\n"
+"	// Reflection vector\n"
+"	vec3 eyevec = normalize(vsPosition.xyz);\n"
+"	float eyedotnorm = dot(eyevec, texnormal.xyz);\n"
+"	vec3 reflectvec = (texnormal.xyz * (eyedotnorm * 2.0)) - eyevec;\n"
+"	// Reflected color\n"
+"	vec4 color = textureCube(tex, reflectvec);\n"
+"	// Fresnel reflection\n"
+"	float fresnelalpha = 1.0 - abs(eyedotnorm);\n"
+"	color *= fresnelalpha * fresnelalpha * fresnelalpha;\n"
+"	// Overbrighten and modulate with vertex color using a mix of regular multiplicative and subtractive alpha\n"
+"	color.rgb = 2.0 * mix(color.rgb * gl_Color.rgb, max(vec3(0.0, 0.0, 0.0), color.rgb + gl_Color.rgb - vec3(1.0, 1.0, 1.0)), 0.6);\n"
+"	// Depth cue\n"
+"	color = mix(gl_Fog.color, color, clamp((gl_Fog.end + vsPosition.z) * gl_Fog.scale, 0.0, 1.0));\n" 
+"	gl_FragColor = color;\n"
+"}\n"
+);
 
 
-const char* tunnel_vp_asm = {
-"!!ARBvp1.0\n"
+const std::string tunnelVertSource(
+"varying vec4 vsPosition;\n"
+"varying vec4 gl_TexCoord[1];\n"
+"void main(void){\n"
+"	vsPosition = gl_ModelViewMatrix * gl_Vertex;\n"
+"	gl_FrontColor = gl_Color;\n"
+"	gl_BackColor = gl_Color;\n"
+"	gl_TexCoord[0] = gl_MultiTexCoord0;\n"
+"	gl_Position = ftransform();\n"
+"}\n"
+);
 
-"PARAM mvp[4] = { state.matrix.mvp };\n"
+const std::string tunnelFragSource(
+"varying vec4 vsPosition;\n"
+"varying vec4 gl_TexCoord[1];\n"
+"uniform sampler2D tex0;\n"
+"uniform sampler2D tex1;\n"
+"void main(void){\n"
+"	vec4 texcol0 = texture2D(tex0, gl_TexCoord[0].xy);\n"
+"	texcol0 += 0.5 * texture2D(tex0, gl_TexCoord[0].xy * vec2(3.0, 2.0));\n"
+"	vec4 texcol1 = texture2D(tex1, gl_TexCoord[0].xy);\n"
+"	texcol1 += 0.5 * texture2D(tex1, gl_TexCoord[0].xy * vec2(3.0, 2.0));\n"
+"	vec4 color = mix(texcol0, texcol1, gl_Color.a);\n"
+"	// Note that max value of color at this point is 1.5\n"
+"	// Overbrighten and modulate with vertex color using a mix of regular multiplicative and subtractive alpha\n"
+"	color.rgb = 2.0 * mix(gl_Color.rgb * color.rgb, max(vec3(0.0, 0.0, 0.0), (gl_Color.rgb * vec3(1.5, 1.5, 1.5)) + color.rgb - vec3(1.5, 1.5, 1.5)), 0.5);\n"
+"	// Depth cue\n"
+"	color = mix(gl_Fog.color, color, clamp((gl_Fog.end + vsPosition.z) * gl_Fog.scale, 0.0, 1.0));\n" 
+"	gl_FragColor = color;\n"
+"}\n"
+);
 
-"TEMP temppos, fogtemp;\n"
 
-"DP4 result.position.x, mvp[0], vertex.position;\n"
-"DP4 result.position.y, mvp[1], vertex.position;\n"
-"DP4 temppos.z, mvp[2], vertex.position;\n"
-"MOV result.position.z, temppos.z;\n"
-"DP4 result.position.w, mvp[3], vertex.position;\n"
-
-"MOV result.color, vertex.color;\n"
-"MOV result.texcoord[0], vertex.texcoord[0];\n"
-
-"SUB fogtemp, state.fog.params.z, temppos.z;\n"
-"MUL result.fogcoord.x, fogtemp.x, state.fog.params.w;\n"
-
-"END\n"
-};
+GLhandleARB gooProgram;
+GLhandleARB tunnelProgram;
 
 
-const char* tunnel_fp_asm = {
-"!!ARBfp1.0\n"
+void initShaders(){
+	GLhandleARB vertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+	const GLchar* gooVertString = gooVertSource.c_str();
+	glShaderSourceARB(vertShader, 1, &gooVertString, NULL);
+	glCompileShaderARB(vertShader);
 
-"TEMP temp, vertcolor, color, tex0, tex1, coord;\n"
+	GLhandleARB fragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+	const GLchar* gooFragString = gooFragSource.c_str();
+	glShaderSourceARB(fragShader, 1, &gooFragString, NULL);
+	glCompileShaderARB(fragShader);
 
-"# texture\n"
-"TEX tex0, fragment.texcoord[0], texture[0], 2D;\n"
-"TEX tex1, fragment.texcoord[0], texture[1], 2D;\n"
-"LRP tex0, fragment.color.a, tex1, tex0;\n"
-"MUL color, tex0, fragment.color;\n"
+	gooProgram = glCreateProgramObjectARB();
+	glAttachObjectARB(gooProgram, vertShader);
+	glAttachObjectARB(gooProgram, fragShader);
+	glLinkProgramARB(gooProgram);
 
-"# higher resolution texture\n"
-"MUL coord, fragment.texcoord[0], 3.0;\n"
-"TEX tex0, coord, texture[0], 2D;\n"
-"TEX tex1, coord, texture[1], 2D;\n"
-"LRP tex0, fragment.color.a, tex1, tex0;\n"
-"MUL tex0, tex0, 0.5;\n"
-"MUL vertcolor, fragment.color, fragment.color;\n"
-"MAD color, tex0, vertcolor, color;\n"
+	glUseProgramObjectARB(gooProgram);
+	GLint loc = glGetUniformLocationARB(gooProgram, "normaltex0");
+	glUniform1iARB(loc, 0);
+	loc = glGetUniformLocationARB(gooProgram, "normaltex1");
+	glUniform1iARB(loc, 1);
+	loc = glGetUniformLocationARB(gooProgram, "tex");
+	glUniform1iARB(loc, 2);
 
-"# set alpha\n"
-"MOV color.a, 1.0;\n"
+	vertShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+	const GLchar* tunnelVertString = tunnelVertSource.c_str();
+	glShaderSourceARB(vertShader, 1, &tunnelVertString, NULL);
+	glCompileShaderARB(vertShader);
 
-"# fog\n"
-"LRP result.color, fragment.fogcoord.x, color, state.fog.color;\n"
+	fragShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+	const GLchar* tunnelFragString = tunnelFragSource.c_str();
+	glShaderSourceARB(fragShader, 1, &tunnelFragString, NULL);
+	glCompileShaderARB(fragShader);
 
-"END\n"
-};
+	tunnelProgram = glCreateProgramObjectARB();
+	glAttachObjectARB(tunnelProgram, vertShader);
+	glAttachObjectARB(tunnelProgram, fragShader);
+	glLinkProgramARB(tunnelProgram);
 
+	glUseProgramObjectARB(tunnelProgram);
+	loc = glGetUniformLocationARB(tunnelProgram, "tex0");
+	glUniform1iARB(loc, 0);
+	loc = glGetUniformLocationARB(tunnelProgram, "tex1");
+	glUniform1iARB(loc, 1);
+
+	glUseProgramObjectARB(0);
+}
 
 
 #endif

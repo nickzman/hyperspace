@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,21 +24,14 @@
 
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
 #endif
-#include <GL/gl.h>
-#include <math.h>
-#include <rsmath/rsMath.h>
+#include <OpenGL/gl.h>
+#include <rsMath/rsMath.h>
 #include <list>
 #include <Implicit/impCubeVolume.h>
-#include <Implicit/impCrawlPoint.h>*/
-#include <OpenGL/gl.h>
-#include <math.h>
-#include "rsMath.h"
-#include <list>
-#include "impCubeVolume.h"
-#include "impCrawlPoint.h"
+#include <Implicit/impCrawlPoint.h>
 
 typedef struct HyperspaceSaverSettings;
 
@@ -49,9 +43,13 @@ public:
 	float unitSize;
 	float volumeSize;
 
-	float waveOffset[4];
+	/*static */float c[4];  // constants
+	float cp[4];  // constants phase
+	float cs[4];  // constants speed
 
+	/*static */float camx, camz;
 	float centerx, centerz;
+	/*static */float shiftx, shiftz;
 	int arraySize;
 	impCubeVolume* volume;
 	impSurface*** surface;
@@ -60,10 +58,11 @@ public:
 	// normals of planes for culling impSurfaces
 	float clip[3][2];
 
-	goo(int res, float rad, float (*func)(float* position, void *context), void *context);
+	goo(int res, float rad);
 	~goo();
-	void update(float x, float z, float heading, float fov, float *shiftx, float *shiftz);
-	void draw(float *shiftx, float *shiftz);
+	void update(float x, float z, float heading, float fov, HyperspaceSaverSettings *inSettings);
+	static float function(float* position, void *contextInfo);
+	void draw();
 };
 
 

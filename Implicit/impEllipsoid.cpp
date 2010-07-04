@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2001-2005  Terence M. Welsh
+ * Copyright (C) 2001-2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
  * Implicit is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * Implicit is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,22 +19,18 @@
  */
 
 
-//#include <Implicit/impEllipsoid.h>
-#include "impEllipsoid.h"
+#include <Implicit/impEllipsoid.h>
+
 
 
 float impEllipsoid::value(float* position){
-	const float tx(position[0] * invmat[0]
-		+ position[1] * invmat[4]
-		+ position[2] * invmat[8]
-		+ invmat[12]);
-	const float ty(position[0] * invmat[1]
-		+ position[1] * invmat[5]
-		+ position[2] * invmat[9]
-		+ invmat[13]);
-	const float tz(position[0] * invmat[2]
-		+ position[1] * invmat[6]
-		+ position[2] * invmat[10]
-		+ invmat[14]);
-	return(1.0f / (tx*tx + ty*ty + tz*tz));
+	const float& x(position[0]);
+	const float& y(position[1]);
+	const float& z(position[2]);
+
+	const float tx(x * invtrmat[0] + y * invtrmat[1] + z * invtrmat[2] + invtrmat[3]);
+	const float ty(x * invtrmat[4] + y * invtrmat[5] + z * invtrmat[6] + invtrmat[7]);
+	const float tz(x * invtrmat[8] + y * invtrmat[9] + z * invtrmat[10] + invtrmat[11]);
+
+	return thicknessSquared / (tx*tx + ty*ty + tz*tz + IMP_MIN_DIVISOR);
 }

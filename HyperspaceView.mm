@@ -28,7 +28,15 @@
 #import "flare.h"
 #import <sys/time.h>
 #import <OpenGL/OpenGL.h>
-#import "MacHelperFunctions.h"
+#import "Hyperspace/extensions.h"
+
+FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
+{
+	SInt32 osVersion;
+	
+	Gestalt(gestaltSystemVersion, &osVersion);
+	return (osVersion >= 0x1043 && queryExtension("GL_ARB_multitexture") && queryExtension("GL_ARB_texture_cube_map") && queryExtension("GL_ARB_shader_objects"));
+}
 
 @interface HyperspaceView (Private)
 - (void)readDefaults:(ScreenSaverDefaults *)inDefaults;
@@ -79,6 +87,7 @@
                 }
                 
                 [self setAnimationTimeInterval:1/30.0];
+				lSettings.first = 1;
             }
 		}
     }
@@ -91,6 +100,7 @@
 	[super setFrameSize:size];
 	if (lView)
 		[lView setFrameSize:size];
+	reshape(int(size.width), int(size.height), &lSettings);
 }
 
 
@@ -102,9 +112,6 @@
     {
         if (lMainScreen || !lMainScreenOnly)
         {
-            NSSize tSize;
-            struct timeval tTime;
-            int i;
 			GLint interval = 1;
             
             [self lockFocus];
@@ -116,19 +123,9 @@
             CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &interval);	// don't allow screen tearing
             [[lView openGLContext] flushBuffer];
             
-            tSize=[lView frame].size;
-            initSaver((int)tSize.width, (int)tSize.height, &lSettings);
-			
-            for (i = 0 ; i < 10 ; i++)
-            {
-                lTimes[i]=0.03f;
-            }
-            lTimeindex = 0;
-            lSettings.frameTime=0;
-            [self unlockFocus];
-			
-            gettimeofday(&tTime, NULL);
-            lLastTime=(tTime.tv_sec*1000+tTime.tv_usec/1000);
+            initSaver(&lSettings);
+			gettimeofday(&timer.prev_tv, NULL);	// reset the timer
+			[self unlockFocus];
         }
     }
 }
@@ -187,32 +184,17 @@
 
 - (void)animateOneFrame
 {
-    if (lIsConfiguring == NO && lView)
+	if (lIsConfiguring == NO && lView)
     {
         if (lMainScreen || !lMainScreenOnly)
         {
-            struct timeval tTime;
-            unsigned long long tCurentTime;
-            
-            [[lView openGLContext] makeCurrentContext];
-            
-            gettimeofday(&tTime, NULL);
-            tCurentTime=(tTime.tv_sec*1000+tTime.tv_usec/1000);
-            if(tCurentTime >= lLastTime)
-                lTimes[lTimeindex] = float(tCurentTime - lLastTime) * 0.001f;
-            else  // else use elapsedTime from last frame
-                lTimes[lTimeindex] = lSettings.frameTime;
-            
-            lSettings.frameTime = 0.1f * (lTimes[0] + lTimes[1] + lTimes[2] + lTimes[3] + lTimes[4] + lTimes[5] + lTimes[6] + lTimes[7] + lTimes[8] + lTimes[9]);
-			
-            lTimeindex ++;
-            if(lTimeindex >= 10)
-                lTimeindex = 0;
-			
-            lLastTime=tCurentTime;
-            draw(&lSettings);
-            
-            [[lView openGLContext] flushBuffer];
+			lSettings.frameTime = timer.tick();
+			if (lSettings.readyToDraw)
+			{
+				[[lView openGLContext] makeCurrentContext];
+				draw(&lSettings);
+				[[lView openGLContext] flushBuffer];
+			}
         }
     }
 }

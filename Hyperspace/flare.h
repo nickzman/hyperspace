@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,15 +24,12 @@
 
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
 #endif
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <rsMath/rsMath.h>*/
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
-#include "rsMath.h"
+#include <rsMath/rsMath.h>
 
 #include "Hyperspace.h"
 
@@ -50,6 +48,10 @@ void initFlares(HyperspaceSaverSettings *inSettings);
 // alpha = 0.0 for lowest intensity; alpha = 1.0 for highest intensity
 void flare(float *pos, float red, float green, float blue, float alpha, HyperspaceSaverSettings *inSettings);
 
+
+#ifndef WIN32
+inline const float max(const float& a, const float& b){ return (a > b) ? a : b; }
+#endif
 
 
 #endif  // FLARE_H

@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 1999-2005  Terence M. Welsh
+ * Copyright (C) 1999-2010  Terence M. Welsh
  *
  * This file is part of Rgbhsl.
  *
  * Rgbhsl is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * Rgbhsl is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,9 +19,8 @@
  */
 
 
-
-//#include <Rgbhsl/Rgbhsl.h>
-#include "Rgbhsl.h"
+#include <Rgbhsl/Rgbhsl.h>
+#include <math.h>
 
 
 void rgb2hsl(float r, float g, float b, float &h, float &s, float &l){
@@ -123,15 +123,16 @@ void rgb2hsl(float r, float g, float b, float &h, float &s, float &l){
 
 void hsl2rgb(float h, float s, float l, float &r, float &g, float &b){
 	// hue influence
+	h = fmodf(h, 1.0f);
 	if(h < 0.166667){  // full red, some green
 		r = 1.0f;
 		g = h * 6.0f;
 		b = 0.0f;
 	}
 	else {
-		if(h < 0.5f){  // full green
+		if(h < 0.5){  // full green
 			g = 1.0f;
-			if(h < 0.333333f){  // some red
+			if(h < 0.333333){  // some red
 				r = 1.0f - ((h - 0.166667f) * 6.0f);
 				b = 0.0f;
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2010  Terence M. Welsh
+ * Copyright (C) 2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
@@ -19,16 +19,29 @@
  */
 
 
-#include <Implicit/impSphere.h>
+#ifndef IMPROUNDEDHEXAHEDRON_H
+#define IMPROUNDEDHEXAHEDRON_H
 
 
 
-float impSphere::value(float* position){
-	const float tx(invmat[12] + position[0]);
-	const float ty(invmat[13] + position[1]);
-	const float tz(invmat[14] + position[2]);
-	// Use thickness instead of relying on scale to be in the matrix
-	// because the value computation for a sphere is simplified by
-	// using an incomplete matrix.
-	return thicknessSquared / (tx*tx + ty*ty + tz*tz + IMP_MIN_DIVISOR);
-}
+#include <Implicit/impShape.h>
+
+
+
+// An impRoundedHexahedron is a rectangular solid with rounded corners.
+// It is defined as the inverse square falloff from a rectangular solid.
+class impRoundedHexahedron : public impShape{
+	float width, height, length;  // dimension on x-, y-, and z-axes
+
+public:
+	impRoundedHexahedron(){
+		width = height = length = 1.0f;
+	};
+	~impRoundedHexahedron(){};
+	void setSize(float w, float h, float l){ width = w; height = h; length = l; }
+	virtual float value(float* position);
+};
+
+
+
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2010  Terence M. Welsh
+ * Copyright (C) 2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
@@ -19,16 +19,24 @@
  */
 
 
-#include <Implicit/impSphere.h>
+#include <Implicit/impCapsule.h>
 
 
+float impCapsule::value(float* position){
+	const float& x(position[0]);
+	const float& y(position[1]);
+	const float& z(position[2]);
 
-float impSphere::value(float* position){
-	const float tx(invmat[12] + position[0]);
-	const float ty(invmat[13] + position[1]);
-	const float tz(invmat[14] + position[2]);
-	// Use thickness instead of relying on scale to be in the matrix
-	// because the value computation for a sphere is simplified by
-	// using an incomplete matrix.
-	return thicknessSquared / (tx*tx + ty*ty + tz*tz + IMP_MIN_DIVISOR);
+	const float tx(x * invtrmat[0] + y * invtrmat[1] + z * invtrmat[2] + invtrmat[3]);
+	const float ty(x * invtrmat[4] + y * invtrmat[5] + z * invtrmat[6] + invtrmat[7]);
+	const float tz(x * invtrmat[8] + y * invtrmat[9] + z * invtrmat[10] + invtrmat[11]);
+
+	// Compute shrunken value.
+	// Use 0.001 instead of 0.0 to avoid divide-by-zero.
+	const float zz(fabsf(tz) - length);
+	//const float sz((zz < 0.001f) ? 0.001f : zz);
+	// rewritten with fewer conditionals
+	const float sz(zz * (zz > 0.0f));
+
+	return thicknessSquared / (tx*tx + ty*ty + sz*sz + IMP_MIN_DIVISOR);
 }

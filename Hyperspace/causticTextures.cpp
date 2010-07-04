@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,30 +19,24 @@
  */
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
+	extern HDC hdc;
+#endif
+#ifdef RS_XSCREENSAVER
+#include <rsXScreenSaver/rsXScreenSaver.h>
 #endif
 #include <iostream>
 #include <Hyperspace/causticTextures.h>
 #include <math.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <rsMath/rsMath.h>*/
-#include <iostream>
-#include "causticTextures.h"
-#include <math.h>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include "rsMath.h"
-
-
-//extern HDC hdc;
+#include <OpenGL/OpenGL.h>
+#include <rsMath/rsMath.h>
 
 
 causticTextures::causticTextures(int keys, int frames, int res, int size, float depth, float wa, float rm){
 	int i, j, k;
 	int xminus, xplus, zminus, zplus;
-	GLint viewport[4];
+	int viewport[4];
 	unsigned char* bitmap = new unsigned char[size * size * 3];
 
 	// initialize dimensions
@@ -207,8 +202,13 @@ causticTextures::causticTextures(int keys, int frames, int res, int size, float 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texSize, texSize, GL_RGB,
 			GL_UNSIGNED_BYTE, bitmap);
-
-		//wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+		
+#ifdef WIN32
+		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+#endif
+#ifdef RS_XSCREENSAVER
+		glXSwapBuffers(xdisplay, xwindow);
+#endif
 	}
 
 	// restore matrix stack

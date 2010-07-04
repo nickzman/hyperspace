@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2010  Terence M. Welsh
+ * Copyright (C) 2010  Terence M. Welsh
  *
  * This file is part of Implicit.
  *
@@ -19,16 +19,25 @@
  */
 
 
-#include <Implicit/impSphere.h>
+#ifndef IMPCAPSULE_H
+#define IMPCAPSULE_H
 
 
+#include <Implicit/impShape.h>
 
-float impSphere::value(float* position){
-	const float tx(invmat[12] + position[0]);
-	const float ty(invmat[13] + position[1]);
-	const float tz(invmat[14] + position[2]);
-	// Use thickness instead of relying on scale to be in the matrix
-	// because the value computation for a sphere is simplified by
-	// using an incomplete matrix.
-	return thicknessSquared / (tx*tx + ty*ty + tz*tz + IMP_MIN_DIVISOR);
-}
+
+// An impCapsule is defined as the inverse square falloff from a segment.
+class impCapsule : public impShape{
+	float length;  // dimension on z-axis
+
+public:
+	impCapsule(){
+		length = 1.0f;
+	};
+	~impCapsule(){};
+	void setLength(float l){ length = l; }
+	virtual float value(float* position);
+};
+
+
+#endif

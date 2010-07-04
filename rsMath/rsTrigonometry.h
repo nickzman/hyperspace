@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 1999-2005  Terence M. Welsh
+ * Copyright (C) 1999-2010  Terence M. Welsh
  *
  * This file is part of rsMath.
  *
  * rsMath is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * rsMath is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -215,6 +216,22 @@ inline float rsSinf(float value){
 #endif
 	// Do it
 	return rs_sine_table[i] + fraction * rs_sine_fraction_table[i];
+}
+
+
+#define PIo4 0.785398163f
+#define PI3o4 2.35619449019f
+inline const float rsAtan2f(const float& y, const float& x){
+	float angle;
+	const float abs_y(fabsf(y) + 0.000001f);
+	if(x >= 0.0f)
+		angle = PIo4 - PIo4 * ((x - abs_y) / (x + abs_y));
+	else
+		angle = PI3o4 - PIo4 * ((x + abs_y) / (abs_y - x));
+
+	if(y < 0)
+		return(-angle);
+	return(angle);
 }
 
 

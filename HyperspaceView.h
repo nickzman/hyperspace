@@ -25,6 +25,7 @@
 
 #import <ScreenSaver/ScreenSaver.h>
 #import "Hyperspace.h"
+#import "util/rsTimer.h"
 
 @interface HyperspaceView : ScreenSaverView 
 {
@@ -34,9 +35,7 @@
 	BOOL lMainScreenOnly;
 	BOOL lIsConfiguring;
 	
-	float lTimes[10];
-    int lTimeindex;
-    unsigned long long lLastTime;
+	rsTimer timer;
 	
 	IBOutlet NSWindow *ibConfigureSheet;
 	IBOutlet NSTextField *ibVersionTxt;

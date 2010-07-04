@@ -23,16 +23,19 @@ typedef struct HyperspaceSaverSettings
 	int dResolution;
 	int dDepth;
 	int dFov;
+	bool dUseTunnels;
+	bool dUseGoo;
 	bool dShaders;
 	bool kStatistics;
 	
 	// Additional globals:
 	float frameTime;
 	bool doingPreview;
+	bool readyToDraw;
 	int xsize, ysize;
 	float aspectRatio;
 	rsText *textwriter;
-	bool firstDraw;
+	bool first;
 	
 	float unroll;
 	float billboardMat[16];
@@ -49,17 +52,12 @@ typedef struct HyperspaceSaverSettings
 	splinePath* thePath;
 	tunnel* theTunnel;
 	goo* theGoo;
-	float shiftx, shiftz;
 	GLuint speckletex, spheretex, nebulatex;
 	GLuint goo_vp, goo_fp, tunnel_vp, tunnel_fp;
 	
 	stretchedParticle** stars;
 	stretchedParticle* sunStar;
 	starBurst* theStarBurst;
-	
-	float goo_c[4];  // goo constants
-	float goo_cp[4]/* = {0.0f, 1.0f, 2.0f, 3.0f}*/;  // goo constants phase
-	float goo_cs[4];  // goo constants speed
 	
 	unsigned char flare1[FLARESIZE][FLARESIZE][4];
 	unsigned char flare2[FLARESIZE][FLARESIZE][4];
@@ -70,7 +68,8 @@ typedef struct HyperspaceSaverSettings
 };
 
 __private_extern__ void draw(HyperspaceSaverSettings *inSettings);
-__private_extern__ void initSaver(int width, int height, HyperspaceSaverSettings *inSettings);
+__private_extern__ void reshape(int width, int height, HyperspaceSaverSettings *inSettings);
+__private_extern__ void initSaver(HyperspaceSaverSettings *inSettings);
 __private_extern__ void cleanUp(HyperspaceSaverSettings *inSettings);
 __private_extern__ void setDefaults(HyperspaceSaverSettings *inSettings);
 

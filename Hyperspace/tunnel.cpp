@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 2005  Terence M. Welsh
+ * Copyright (C) 2005-2010  Terence M. Welsh
  *
  * This file is part of Hyperspace.
  *
  * Hyperspace is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as 
- * published by the Free Software Foundation.
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
  *
  * Hyperspace is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,20 +19,17 @@
  */
 
 
-/*#ifdef WIN32
+#ifdef WIN32
 	#include <windows.h>
 #endif
 #include <Hyperspace/tunnel.h>
 #include <math.h>
-#include <GL/gl.h>
-#include <rsMath/rsMath.h>
-#include <Rgbhsl/Rgbhsl.h>*/
-#include "tunnel.h"
-#include <math.h>
 #include <OpenGL/gl.h>
-#include "rsMath.h"
-#include "Rgbhsl.h"
+#include <rsMath/rsMath.h>
+#include <Rgbhsl/Rgbhsl.h>
 
+
+//extern int dShaders;
 
 
 tunnel::tunnel(splinePath* sp, int res){
@@ -80,7 +78,7 @@ tunnel::~tunnel(){
 }
 
 
-void tunnel::make(float frameTime){
+void tunnel::make(float frameTime, bool dShaders){
 	int i, j, k;
 
 	widthOffset += frameTime * 1.5f;
@@ -114,6 +112,8 @@ void tunnel::make(float frameTime){
 	rsVec vert;
 	rsMatrix rotMat;
 	float hsl[3];
+	const float texcoordmult = (dShaders > 0) ? 1.0f : 2.0f;
+	const float max_saturation = (dShaders > 0) ? 0.1f : 0.4f;
 	for(k=0; k<numSections; k++){
 		// create new vertex data for this section
 		for(i=0; i<=resolution; i++){
@@ -134,7 +134,7 @@ void tunnel::make(float frameTime){
 			rotMat.m[5] = rotMat.m[10] * rotMat.m[0] - rotMat.m[8] * rotMat.m[2];
 			rotMat.m[6] = rotMat.m[8] * rotMat.m[1] - rotMat.m[9] * rotMat.m[0];
 			for(j=0; j<=resolution; j++){
-				angle = float(j) * 6.28318530718f / float(resolution);
+				angle = float(j) * RS_PIx2 / float(resolution);
 				vert[0] = (radius + radius * 0.5f * rsCosf(2.0f * pos[0] + widthOffset)) * rsCosf(angle);
 				vert[1] = (radius + radius * 0.5f * rsCosf(pos[2] + widthOffset)) * rsSinf(angle);
 				vert[2] = 0.0f;
@@ -144,8 +144,8 @@ void tunnel::make(float frameTime){
 				v[k][i][j][1] = pos[1] + vert[1];
 				v[k][i][j][2] = pos[2] + vert[2];
 				// set texture coordinates
-				t[k][i][j][0] = 4.0f * float(i) / float(resolution);
-				t[k][i][j][1] = float(j) / float(resolution) + rsCosf(texSpin);
+				t[k][i][j][0] = texcoordmult * float(i) / float(resolution);
+				t[k][i][j][1] = texcoordmult * float(j) / float(resolution) + rsCosf(texSpin);
 				// set colors
 				hsl[0] = 2.0f * rsCosf(0.1f * v[k][i][j][0] + huelo) - 1.0f;
 				hsl[1] = 0.25f * (rsCosf(0.013f * v[k][i][j][1] - satlo)
@@ -157,13 +157,13 @@ void tunnel::make(float frameTime){
 					hsl[0] += 1.0f;
 				while(hsl[0] > 1.0f)
 					hsl[0] -= 1.0f;
-				while(hsl[1] < 0.0f)
+				if(hsl[1] < 0.0f)
 					hsl[1] = 0.0f;
-				while(hsl[1] > 0.7f)
-					hsl[1] = 0.7f;
-				while(hsl[2] < 0.0f)
+				if(hsl[1] > max_saturation)
+					hsl[1] = max_saturation;
+				if(hsl[2] < 0.0f)
 					hsl[2] = 0.0f;
-				while(hsl[2] > 1.0f)
+				if(hsl[2] > 1.0f)
 					hsl[2] = 1.0f;
 				hsl2rgb(hsl[0], hsl[1], hsl[2], c[k][i][j][0], c[k][i][j][1], c[k][i][j][2]);
 			}
@@ -196,12 +196,10 @@ void tunnel::draw(){
 // lerp goes into color alpha and determines blend between
 // texture frames.
 void tunnel::draw(float lerp){
-	int i, j, k;
-
-	for(k=0; k<numSections; k++){
-		for(i=0; i<resolution; i++){
+	for(int k=0; k<numSections; k++){
+		for(int i=0; i<resolution; i++){
 			glBegin(GL_TRIANGLE_STRIP);
-			for(j=0; j<=resolution; j++){
+			for(int j=0; j<=resolution; j++){
 				glColor4f(c[k][i+1][j][0], c[k][i+1][j][1], c[k][i+1][j][2], lerp);
 				glTexCoord2fv(t[k][i+1][j]);
 				glVertex3fv(v[k][i+1][j]);

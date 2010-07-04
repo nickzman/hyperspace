@@ -1,11 +1,12 @@
 /*
- * Copyright (C) 1999-2005  Terence M. Welsh
+ * Copyright (C) 1999-2010  Terence M. Welsh
  *
  * This file is part of rsMath.
  *
  * rsMath is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License version 2.1 as published by the Free Software Foundation.
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * rsMath is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -36,8 +37,8 @@ public:
 	~rsQuat();
 	void set(float x, float y, float z, float w);	// x, y, z, w
 	void copy(rsQuat);						// Copy another quaternion
-	void make(float a, float x, float y, float z);	// angle, axis
-	void make(float a, const rsVec &v);
+	void make(float a, float x, float y, float z);	// angle, normalized axis
+	void make(float a, const rsVec &v);  	// angle, normalized axis
 	void normalize();
 	void preMult(rsQuat &postQuat);			// Multiply this quaternion by
 											// the passed quaternion
