@@ -240,6 +240,8 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	[inDefaults setInteger:lSettings.dDepth forKey:@"Depth"];
 	[inDefaults setInteger:lSettings.dFov forKey:@"Fov"];
 	[inDefaults setBool:lSettings.dShaders forKey:@"UseShaders"];
+	[inDefaults setBool:lSettings.dUseGoo forKey:@"UseGoo"];
+	[inDefaults setBool:lSettings.dUseTunnels forKey:@"UseTunnels"];
 	[inDefaults setBool:lMainScreenOnly forKey:@"MainScreenOnly"];
 	
 	lIsConfiguring = NO;
@@ -289,10 +291,16 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 			[ibFovTxt setIntValue:[sender intValue]];
 			break;
 		case 7:	// shaders
-			lSettings.dShaders = ([sender state] == NSOnState) ? true : false;
+			lSettings.dShaders = ([sender state] == NSOnState ? true : false);
 			break;
 		case 8:	// main screen
-			lMainScreenOnly = ([sender state] == NSOnState) ? true : false;
+			lMainScreenOnly = ([sender state] == NSOnState ? true : false);
+			break;
+		case 9:	// goo
+			lSettings.dUseGoo = ([sender state] == NSOnState ? true : false);
+			break;
+		case 10:	// tunnels
+			lSettings.dUseTunnels = ([sender state] == NSOnState ? true : false);
 			break;
 	}
 }
@@ -311,6 +319,10 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	lSettings.dDepth = int([inDefaults integerForKey:@"Depth"]);
 	lSettings.dFov = int([inDefaults integerForKey:@"Fov"]);
 	lSettings.dShaders = [inDefaults integerForKey:@"UseShaders"];
+	if ([inDefaults objectForKey:@"UseGoo"])
+		lSettings.dUseGoo = [inDefaults integerForKey:@"UseGoo"];
+	if ([inDefaults objectForKey:@"UseTunnels"])
+		lSettings.dUseTunnels = [inDefaults integerForKey:@"UseTunnels"];
 	lMainScreenOnly = [inDefaults boolForKey:@"MainScreenOnly"];
 }
 
@@ -329,8 +341,10 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	[ibDepthTxt setIntValue:lSettings.dDepth];
 	[ibFov setIntValue:lSettings.dFov];
 	[ibFovTxt setIntValue:lSettings.dFov];
-	[ibShaderCbx setState:(lSettings.dShaders) ? NSOnState : NSOffState];
-	[ibMainScreenOnlyCbx setState:(lMainScreenOnly) ? NSOnState : NSOffState];
+	[ibShaderCbx setState:(lSettings.dShaders ? NSOnState : NSOffState)];
+	[ibGooCbx setState:(lSettings.dUseGoo ? NSOnState : NSOffState)];
+	[ibTunnelCbx setState:(lSettings.dUseTunnels ? NSOnState : NSOffState)];
+	[ibMainScreenOnlyCbx setState:(lMainScreenOnly ? NSOnState : NSOffState)];
 }
 
 @end
