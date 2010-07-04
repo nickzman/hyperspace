@@ -649,6 +649,7 @@ void cleanUp(HyperspaceSaverSettings *inSettings){
 	}
 	delete inSettings->thePath;
 	delete inSettings->theWNCM;
+	inSettings->first = 1;
 }
 //#endif
 
