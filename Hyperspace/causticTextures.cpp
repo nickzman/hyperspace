@@ -36,7 +36,7 @@
 causticTextures::causticTextures(int keys, int frames, int res, int size, float depth, float wa, float rm){
 	int i, j, k;
 	int xminus, xplus, zminus, zplus;
-	int viewport[4];
+	GLint viewport[4];
 	unsigned char* bitmap = new unsigned char[size * size * 3];
 
 	// initialize dimensions
