@@ -410,7 +410,7 @@
 								<reference key="NSControlView" ref="791980831"/>
 								<int key="NSTag">3</int>
 								<double key="NSMaxValue">100</double>
-								<double key="NSMinValue">0.0</double>
+								<double key="NSMinValue">1</double>
 								<double key="NSValue">50</double>
 								<double key="NSAltIncValue">0.0</double>
 								<int key="NSNumberOfTickMarks">11</int>
@@ -451,7 +451,7 @@
 								<reference key="NSSupport" ref="596135064"/>
 								<reference key="NSControlView" ref="875701342"/>
 								<int key="NSTag">2</int>
-								<double key="NSMaxValue">2000</double>
+								<double key="NSMaxValue">10000</double>
 								<double key="NSMinValue">0.0</double>
 								<double key="NSValue">50</double>
 								<double key="NSAltIncValue">0.0</double>
@@ -478,7 +478,7 @@
 								<reference key="NSControlView" ref="132258854"/>
 								<int key="NSTag">1</int>
 								<double key="NSMaxValue">20</double>
-								<double key="NSMinValue">0.0</double>
+								<double key="NSMinValue">4</double>
 								<double key="NSValue">20</double>
 								<double key="NSAltIncValue">0.0</double>
 								<int key="NSNumberOfTickMarks">5</int>
@@ -609,9 +609,9 @@
 								<reference key="NSSupport" ref="596135064"/>
 								<reference key="NSControlView" ref="862512925"/>
 								<int key="NSTag">5</int>
-								<double key="NSMaxValue">20</double>
-								<double key="NSMinValue">0.0</double>
-								<double key="NSValue">20</double>
+								<double key="NSMaxValue">10</double>
+								<double key="NSMinValue">1</double>
+								<double key="NSValue">10</double>
 								<double key="NSAltIncValue">0.0</double>
 								<int key="NSNumberOfTickMarks">5</int>
 								<int key="NSTickMarkPosition">0</int>
@@ -635,8 +635,8 @@
 								<reference key="NSSupport" ref="596135064"/>
 								<reference key="NSControlView" ref="650523191"/>
 								<int key="NSTag">6</int>
-								<double key="NSMaxValue">200</double>
-								<double key="NSMinValue">0.0</double>
+								<double key="NSMaxValue">150</double>
+								<double key="NSMinValue">10</double>
 								<double key="NSValue">50</double>
 								<double key="NSAltIncValue">0.0</double>
 								<int key="NSNumberOfTickMarks">21</int>
