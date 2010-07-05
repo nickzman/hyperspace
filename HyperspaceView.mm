@@ -95,6 +95,13 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 }
 
 
+- (void)dealloc
+{
+	[ibConfigureSheet release];	// we have to release top level nib objects
+	[super dealloc];
+}
+
+
 - (void)setFrameSize:(NSSize)size
 {
 	[super setFrameSize:size];
