@@ -250,6 +250,7 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	[inDefaults setBool:lSettings.dUseGoo forKey:@"UseGoo"];
 	[inDefaults setBool:lSettings.dUseTunnels forKey:@"UseTunnels"];
 	[inDefaults setBool:lMainScreenOnly forKey:@"MainScreenOnly"];
+	[inDefaults synchronize];
 	
 	lIsConfiguring = NO;
 	if ([self isAnimating])
