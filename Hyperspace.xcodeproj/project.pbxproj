@@ -15,6 +15,7 @@
 		8D255ACF0486D3F9007BF209 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */; };
 		E03109500F60E0CB009FCCA0 /* frsqrt.hh in Headers */ = {isa = PBXBuildFile; fileRef = E031094F0F60E0CB009FCCA0 /* frsqrt.hh */; };
 		E042195B09A973B500E46FE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E042195909A973B500E46FE2 /* Localizable.strings */; };
+		E04FD81D17DC286F00CDEC91 /* thumbnail.png in Resources */ = {isa = PBXBuildFile; fileRef = E04FD81C17DC286F00CDEC91 /* thumbnail.png */; };
 		E0657D0611E1261800B061F8 /* rsMath.h in Headers */ = {isa = PBXBuildFile; fileRef = E0657CFC11E1261800B061F8 /* rsMath.h */; };
 		E0657D0711E1261800B061F8 /* rsMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0657CFD11E1261800B061F8 /* rsMatrix.cpp */; };
 		E0657D0811E1261800B061F8 /* rsMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = E0657CFE11E1261800B061F8 /* rsMatrix.h */; };
@@ -91,6 +92,7 @@
 		8D255AD30486D3F9007BF209 /* Hyperspace.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Hyperspace.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		E031094F0F60E0CB009FCCA0 /* frsqrt.hh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = frsqrt.hh; sourceTree = "<group>"; };
 		E042195A09A973B500E46FE2 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E04FD81C17DC286F00CDEC91 /* thumbnail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbnail.png; sourceTree = "<group>"; };
 		E05D36B00E2A8DE6000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = German.lproj/ConfigureSheet.nib; sourceTree = "<group>"; };
 		E05D36B20E2A8E04000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E05D36B40E2A8E21000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				E042195909A973B500E46FE2 /* Localizable.strings */,
 				8D255AD20486D3F9007BF209 /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+				E04FD81C17DC286F00CDEC91 /* thumbnail.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				8D255ACA0486D3F9007BF209 /* InfoPlist.strings in Resources */,
 				E0CDA30409A928E40004FDE6 /* ConfigureSheet.nib in Resources */,
 				E042195B09A973B500E46FE2 /* Localizable.strings in Resources */,
+				E04FD81D17DC286F00CDEC91 /* thumbnail.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -600,9 +604,9 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-missing-braces",
@@ -620,8 +624,8 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-missing-braces",
