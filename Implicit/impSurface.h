@@ -50,7 +50,7 @@ private:
 #endif
 
 	// display list
-	GLuint mDisplayList;
+	//GLuint mDisplayList;
 
 	// vbo stuff
 	bool mUseVBOs;  // Default to true.  If extensions aren't found, set to false and use draw arrays.
