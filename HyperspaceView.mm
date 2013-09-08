@@ -110,7 +110,7 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	if (lView)
 		[lView setFrameSize:size];
 	
-	if ([self respondsToSelector:@selector(convertRectToBacking:)])
+	if ([lView respondsToSelector:@selector(convertRectToBacking:)] && lView.wantsBestResolutionOpenGLSurface)	// on Lion & later, if we're using a best resolution surface, then call glViewport() with the appropriate width and height for the backing
 	{
 		NSRect newBounds = [self convertRectToBacking:self.bounds];
 		
