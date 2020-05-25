@@ -13,6 +13,7 @@
 		8D255ACC0486D3F9007BF209 /* HyperspaceView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F500797A0118B23001CA0E54 /* HyperspaceView.mm */; };
 		8D255ACE0486D3F9007BF209 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		8D255ACF0486D3F9007BF209 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */; };
+		E02D5129247B9108008561D1 /* ConfigureSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = E02D512B247B9108008561D1 /* ConfigureSheet.xib */; };
 		E03109500F60E0CB009FCCA0 /* frsqrt.hh in Headers */ = {isa = PBXBuildFile; fileRef = E031094F0F60E0CB009FCCA0 /* frsqrt.hh */; };
 		E042195B09A973B500E46FE2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E042195909A973B500E46FE2 /* Localizable.strings */; };
 		E04FD81D17DC286F00CDEC91 /* thumbnail.png in Resources */ = {isa = PBXBuildFile; fileRef = E04FD81C17DC286F00CDEC91 /* thumbnail.png */; };
@@ -78,24 +79,27 @@
 		E0CDA0C209A8F5C50004FDE6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0CDA0C109A8F5C50004FDE6 /* OpenGL.framework */; };
 		E0CDA21209A900520004FDE6 /* Rgbhsl.h in Headers */ = {isa = PBXBuildFile; fileRef = E0CDA21109A900520004FDE6 /* Rgbhsl.h */; };
 		E0CDA21409A900660004FDE6 /* Rgbhsl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E0CDA21309A900660004FDE6 /* Rgbhsl.cpp */; };
-		E0CDA30409A928E40004FDE6 /* ConfigureSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = E0CDA30209A928E40004FDE6 /* ConfigureSheet.nib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		06F27B2DFFEEEFEF11CA0E56 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = /System/Library/Frameworks/ScreenSaver.framework; sourceTree = "<absolute>"; };
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCFA80370C50100C91783 /* Hyperspace_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hyperspace_Prefix.pch; sourceTree = "<group>"; };
 		8D255AD20486D3F9007BF209 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D255AD30486D3F9007BF209 /* Hyperspace.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Hyperspace.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		E02D5120247B8EC2008561D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E02D5121247B8EC2008561D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E02D5122247B8EC8008561D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E02D5123247B8EC8008561D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E02D5125247B8ECC008561D1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E02D5126247B8ECC008561D1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E02D512A247B9108008561D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ConfigureSheet.xib; sourceTree = "<group>"; };
+		E02D512D247B9113008561D1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/ConfigureSheet.strings; sourceTree = "<group>"; };
+		E02D512F247B9118008561D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/ConfigureSheet.strings; sourceTree = "<group>"; };
 		E031094F0F60E0CB009FCCA0 /* frsqrt.hh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = frsqrt.hh; sourceTree = "<group>"; };
-		E042195A09A973B500E46FE2 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E04FD81C17DC286F00CDEC91 /* thumbnail.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = thumbnail.png; sourceTree = "<group>"; };
-		E05D36B00E2A8DE6000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = German.lproj/ConfigureSheet.nib; sourceTree = "<group>"; };
-		E05D36B20E2A8E04000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E05D36B40E2A8E21000F03B2 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = German.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E0657CFC11E1261800B061F8 /* rsMath.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = rsMath.h; sourceTree = "<group>"; };
 		E0657CFD11E1261800B061F8 /* rsMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = rsMatrix.cpp; sourceTree = "<group>"; };
 		E0657CFE11E1261800B061F8 /* rsMatrix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = rsMatrix.h; sourceTree = "<group>"; };
@@ -107,9 +111,6 @@
 		E0657D0411E1261800B061F8 /* rsVec4.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = rsVec4.cpp; sourceTree = "<group>"; };
 		E0657D0511E1261800B061F8 /* rsVec4.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = rsVec4.h; sourceTree = "<group>"; };
 		E0657DEB11E13B8300B061F8 /* rsTimer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = rsTimer.h; sourceTree = "<group>"; };
-		E09A9EC50A5A051400322A8A /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = French.lproj/ConfigureSheet.nib; sourceTree = "<group>"; };
-		E09A9ECA0A5A052000322A8A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E09A9ECB0A5A052C00322A8A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E0AA3C6111E11EEE00F84B8B /* extensions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = extensions.cpp; sourceTree = "<group>"; };
 		E0AA3C6311E11EFF00F84B8B /* extensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = extensions.h; sourceTree = "<group>"; };
 		E0AA3C7B11E122ED00F84B8B /* impCapsule.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = impCapsule.cpp; sourceTree = "<group>"; };
@@ -161,7 +162,6 @@
 		E0CDA0C109A8F5C50004FDE6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		E0CDA21109A900520004FDE6 /* Rgbhsl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Rgbhsl.h; sourceTree = "<group>"; };
 		E0CDA21309A900660004FDE6 /* Rgbhsl.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Rgbhsl.cpp; sourceTree = "<group>"; };
-		E0CDA30309A928E40004FDE6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ConfigureSheet.nib; sourceTree = "<group>"; };
 		F50079790118B23001CA0E54 /* HyperspaceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperspaceView.h; sourceTree = "<group>"; };
 		F500797A0118B23001CA0E54 /* HyperspaceView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperspaceView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -204,7 +204,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E0CDA30209A928E40004FDE6 /* ConfigureSheet.nib */,
+				E02D512B247B9108008561D1 /* ConfigureSheet.xib */,
 				E042195909A973B500E46FE2 /* Localizable.strings */,
 				8D255AD20486D3F9007BF209 /* Info.plist */,
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
@@ -443,14 +443,17 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 1150;
 			};
 			buildConfigurationList = EF7AD73108BB986600CE4634 /* Build configuration list for PBXProject "Hyperspace" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
+				Base,
+				de,
+				fr,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* Hyperspace */;
 			projectDirPath = "";
@@ -467,8 +470,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D255ACA0486D3F9007BF209 /* InfoPlist.strings in Resources */,
-				E0CDA30409A928E40004FDE6 /* ConfigureSheet.nib in Resources */,
 				E042195B09A973B500E46FE2 /* Localizable.strings in Resources */,
+				E02D5129247B9108008561D1 /* ConfigureSheet.xib in Resources */,
 				E04FD81D17DC286F00CDEC91 /* thumbnail.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -527,31 +530,31 @@
 		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				089C167EFE841241C02AAC07 /* English */,
-				E09A9ECB0A5A052C00322A8A /* French */,
-				E05D36B40E2A8E21000F03B2 /* German */,
+				E02D5120247B8EC2008561D1 /* de */,
+				E02D5122247B8EC8008561D1 /* en */,
+				E02D5125247B8ECC008561D1 /* fr */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E02D512B247B9108008561D1 /* ConfigureSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E02D512A247B9108008561D1 /* Base */,
+				E02D512D247B9113008561D1 /* fr */,
+				E02D512F247B9118008561D1 /* de */,
+			);
+			name = ConfigureSheet.xib;
 			sourceTree = "<group>";
 		};
 		E042195909A973B500E46FE2 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				E042195A09A973B500E46FE2 /* English */,
-				E09A9ECA0A5A052000322A8A /* French */,
-				E05D36B20E2A8E04000F03B2 /* German */,
+				E02D5121247B8EC2008561D1 /* de */,
+				E02D5123247B8EC8008561D1 /* en */,
+				E02D5126247B8ECC008561D1 /* fr */,
 			);
 			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		E0CDA30209A928E40004FDE6 /* ConfigureSheet.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E0CDA30309A928E40004FDE6 /* English */,
-				E09A9EC50A5A051400322A8A /* French */,
-				E05D36B00E2A8DE6000F03B2 /* German */,
-			);
-			name = ConfigureSheet.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -560,6 +563,9 @@
 		EF7AD72E08BB986600CE4634 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -569,7 +575,9 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reallyslick.Hyperspace;
 				PRODUCT_NAME = Hyperspace;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Debug;
@@ -577,6 +585,9 @@
 		EF7AD72F08BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_FAST_MATH = YES;
@@ -587,7 +598,9 @@
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				PRODUCT_BUNDLE_IDENTIFIER = com.reallyslick.Hyperspace;
 				PRODUCT_NAME = Hyperspace;
+				SDKROOT = macosx;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Release;
@@ -595,14 +608,37 @@
 		EF7AD73208BB986600CE4634 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
 				"GCC_FAST_OBJC_DISPATCH[arch=ppc]" = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -614,14 +650,36 @@
 		EF7AD73308BB986600CE4634 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
 				"GCC_FAST_OBJC_DISPATCH[arch=ppc]" = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-missing-braces",

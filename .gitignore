@@ -10,3 +10,5 @@ profile
 # Ignore leftovers from other SCM systems:
 CVS
 .svn
+Hyperspace.xcodeproj/project.xcworkspace/xcuserdata
+Hyperspace.xcodeproj/xcuserdata

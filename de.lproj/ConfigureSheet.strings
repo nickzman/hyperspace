@@ -1,0 +1,69 @@
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "5"; */
+"5.title" = "Window";
+
+/* Class = "NSTextFieldCell"; title = "Hyperspace"; ObjectID = "61"; */
+"61.title" = "Hyperspace";
+
+/* Class = "NSTextFieldCell"; title = "(don't localize)"; ObjectID = "62"; */
+"62.title" = "(don't localize)";
+
+/* Class = "NSTextFieldCell"; title = "Copyright © 2005-2010 Terence M. Welsh."; ObjectID = "63"; */
+"63.title" = "Copyright © 2005-2010 Terence M. Welsh.";
+
+/* Class = "NSTextFieldCell"; title = "macOS port by Nick Zitzmann"; ObjectID = "64"; */
+"64.title" = "macOS-Portierung by Nick Zitzmann";
+
+/* Class = "NSTextFieldCell"; title = "Resolution of geometry:"; ObjectID = "65"; */
+"65.title" = "Geometrische Verteilung:";
+
+/* Class = "NSTextFieldCell"; title = "Number of stars:"; ObjectID = "66"; */
+"66.title" = "Anzahl der Sterne:";
+
+/* Class = "NSTextFieldCell"; title = "Speed:"; ObjectID = "67"; */
+"67.title" = "Geschwindigkeit:";
+
+/* Class = "NSTextFieldCell"; title = "Size of stars:"; ObjectID = "68"; */
+"68.title" = "Größe der Sterne:";
+
+/* Class = "NSTextFieldCell"; title = "View depth:"; ObjectID = "69"; */
+"69.title" = "Sichtweite:";
+
+/* Class = "NSTextFieldCell"; title = "Field of view:"; ObjectID = "70"; */
+"70.title" = "Sichtfeld:";
+
+/* Class = "NSButtonCell"; title = "Enable pixel & vertex shaders (if available)"; ObjectID = "71"; */
+"71.title" = "Pixel- & Vertexshader aktivieren (wenn verfügbar)";
+
+/* Class = "NSButtonCell"; title = "Main screen only"; ObjectID = "72"; */
+"72.title" = "Nur auf Hauptbildschirm zeigen";
+
+/* Class = "NSButtonCell"; title = "Close"; ObjectID = "73"; */
+"73.title" = "Schließen";
+
+/* Class = "NSButtonCell"; title = "Defaults"; ObjectID = "74"; */
+"74.title" = "Voreinstellungen";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "76"; */
+"76.title" = "#";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "79"; */
+"79.title" = "#";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "80"; */
+"80.title" = "#";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "81"; */
+"81.title" = "#";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "82"; */
+"82.title" = "#";
+
+/* Class = "NSTextFieldCell"; title = "#"; ObjectID = "83"; */
+"83.title" = "#";
+
+/* Class = "NSButtonCell"; title = "Enable the nebula"; ObjectID = "88"; */
+"88.title" = "Nebelfleck aktivieren";
+
+/* Class = "NSButtonCell"; title = "Enable wormholes"; ObjectID = "90"; */
+"90.title" = "Wurmlock aktivieren";

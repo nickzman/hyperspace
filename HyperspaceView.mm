@@ -30,14 +30,6 @@
 #import <OpenGL/OpenGL.h>
 #import "Hyperspace/extensions.h"
 
-FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
-{
-	SInt32 osVersion;
-	
-	Gestalt(gestaltSystemVersion, &osVersion);
-	return (osVersion >= 0x1043 && queryExtension("GL_ARB_multitexture") && queryExtension("GL_ARB_texture_cube_map") && queryExtension("GL_ARB_shader_objects"));
-}
-
 @interface HyperspaceView (Private)
 - (void)readDefaults:(ScreenSaverDefaults *)inDefaults;
 - (void)setDialogValue;
@@ -68,15 +60,15 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 				NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)32,
 				NSOpenGLPFADoubleBuffer,
 				NSOpenGLPFAMinimumPolicy,
+				NSOpenGLPFAAllowOfflineRenderers,
 				(NSOpenGLPixelFormatAttribute)0
 			};
-            NSOpenGLPixelFormat *format = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attribs] autorelease];
+            NSOpenGLPixelFormat *format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
             
             if (format)
             {
-                lView = [[[NSOpenGLView alloc] initWithFrame:NSZeroRect pixelFormat:format] autorelease];
-				if ([lView respondsToSelector:@selector(setWantsBestResolutionOpenGLSurface:)])
-					lView.wantsBestResolutionOpenGLSurface = YES;
+                lView = [[NSOpenGLView alloc] initWithFrame:NSZeroRect pixelFormat:format];
+				lView.wantsBestResolutionOpenGLSurface = YES;
                 [self addSubview:lView];
 				
                 lSettings.frameTime = 0;
@@ -88,19 +80,12 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
                     [self readDefaults:defaults];
                 }
                 
-                [self setAnimationTimeInterval:1/30.0];
+				self.animationTimeInterval = 1.0/60.0;
 				lSettings.first = 1;
             }
 		}
     }
     return self;
-}
-
-
-- (void)dealloc
-{
-	[ibConfigureSheet release];	// we have to release top level nib objects
-	[super dealloc];
 }
 
 
@@ -110,7 +95,7 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
 	if (lView)
 		[lView setFrameSize:size];
 	
-	if ([lView respondsToSelector:@selector(convertRectToBacking:)] && lView.wantsBestResolutionOpenGLSurface)	// on Lion & later, if we're using a best resolution surface, then call glViewport() with the appropriate width and height for the backing
+	if (lView.wantsBestResolutionOpenGLSurface)	// on Lion & later, if we're using a best resolution surface, then call glViewport() with the appropriate width and height for the backing
 	{
 		NSRect newBounds = [self convertRectToBacking:self.bounds];
 		
@@ -184,8 +169,6 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
             
             tAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:[NSFont systemFontSize]],NSFontAttributeName,[NSColor whiteColor],NSForegroundColorAttributeName,tParagraphStyle,NSParagraphStyleAttributeName,nil];
             
-            [tParagraphStyle release];
-            
             tString=NSLocalizedStringFromTableInBundle(@"Minimum OpenGL requirements\rfor this Screen Effect\rnot available\ron your graphic card.",@"Localizable",[NSBundle bundleForClass:[self class]],@"No comment");
             
             tStringFrame.origin=NSZeroPoint;
@@ -228,12 +211,10 @@ FOUNDATION_STATIC_INLINE bool RSSShadersSupported(void)
     lIsConfiguring = YES;
 	if (ibConfigureSheet == nil)
 	{
-		if ([NSBundle loadNibNamed:@"ConfigureSheet" owner:self])
+		if ([[NSBundle bundleForClass:self.class] loadNibNamed:@"ConfigureSheet" owner:self topLevelObjects:NULL])
 		{
 			[ibVersionTxt setStringValue:[[[NSBundle bundleForClass:[self class]] infoDictionary] objectForKey:@"CFBundleVersion"]];	// set the version text
 			[self setDialogValue];
-			if (RSSShadersSupported() == false)
-				[ibShaderCbx setEnabled:NO];
 		}
 		else
 			NSLog(@"Warning: %@ couldn't load ConfigureSheet.nib.", [self className]);
