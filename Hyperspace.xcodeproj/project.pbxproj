@@ -444,6 +444,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1150;
+				TargetAttributes = {
+					8D255AC50486D3F9007BF209 = {
+						DevelopmentTeam = 8D98N325TG;
+					};
+				};
 			};
 			buildConfigurationList = EF7AD73108BB986600CE4634 /* Build configuration list for PBXProject "Hyperspace" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -568,6 +573,8 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 8D98N325TG;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -588,8 +595,11 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8D98N325TG;
+				ENABLE_HARDENED_RUNTIME = YES;
 				GCC_FAST_MATH = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 3;
